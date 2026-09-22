@@ -28,6 +28,7 @@ CI="$ROOT_DIR/.github/workflows/ci.yml"
 README_EN="$ROOT_DIR/README.md"
 README_JA="$ROOT_DIR/README.ja.md"
 README_KO="$ROOT_DIR/README.ko.md"
+README_TH="$ROOT_DIR/README.th.md"
 README_ZH_CN="$ROOT_DIR/README.zh-CN.md"
 README_ZH_TW="$ROOT_DIR/README.zh-TW.md"
 AGENTS_TEMPLATE="$ROOT_DIR/templates/AGENTS.md"
@@ -137,7 +138,7 @@ fi
 # Bash validator prerequisites and fail-open behavior are user-visible in every
 # packaged entrypoint, including translated READMEs.
 for path in "$UDON_DIR/SKILL.md" "$README_EN" "$README_JA" "$README_KO" \
-    "$README_ZH_CN" "$README_ZH_TW"; do
+    "$README_TH" "$README_ZH_CN" "$README_ZH_TW"; do
     require_text "$path" '`jq`'
     require_text "$path" 'VALIDATOR-WARNING'
     require_text "$path" 'JQ_UNAVAILABLE'
@@ -461,6 +462,7 @@ forbid_text "$TROUBLESHOOTING_REF" '**Symptoms:** Events are dropped and do not 
 require_text "$README_EN" 'Never use instance master as a security or access-control boundary.'
 require_text "$README_JA" 'インスタンスマスターをセキュリティやアクセス制御の境界にしてはいけません。'
 require_text "$README_KO" '인스턴스 마스터를 보안 또는 접근 제어 경계로 사용하지 마세요.'
+require_text "$README_TH" 'ห้ามใช้ instance master เป็นขอบเขตความปลอดภัยหรือการควบคุมการเข้าถึง'
 require_text "$README_ZH_CN" '不要将实例 Master 作为安全或访问控制边界。'
 require_text "$README_ZH_TW" '不要將執行個體 Master 當成安全或存取控制邊界。'
 for path in "$AGENTS_TEMPLATE" "$CLAUDE_TEMPLATE" "$GEMINI_TEMPLATE"; do

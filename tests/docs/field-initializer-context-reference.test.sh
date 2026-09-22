@@ -75,8 +75,8 @@ assert_contains "$CHEATSHEET" "Random.Range"
 assert_contains "$CHEATSHEET" "baked default"
 
 mapfile -t readmes < <(find . -maxdepth 1 -type f -name 'README*.md' -printf '%f\n' | sort)
-expected_readmes=(README.ja.md README.ko.md README.md README.zh-CN.md README.zh-TW.md)
-[ "${readmes[*]}" = "${expected_readmes[*]}" ] || fail "expected exactly the five maintained README translations"
+expected_readmes=(README.ja.md README.ko.md README.md README.th.md README.zh-CN.md README.zh-TW.md)
+[ "${readmes[*]}" = "${expected_readmes[*]}" ] || fail "expected exactly the six maintained README translations"
 
 for readme in "${expected_readmes[@]}"; do
     assert_contains "$readme" "Udon runtime"

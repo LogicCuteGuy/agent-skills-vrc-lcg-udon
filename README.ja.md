@@ -1,16 +1,14 @@
-[English](README.md) | **日本語** | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md)
+[English](README.md) | **日本語** | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md) | [ไทย](README.th.md)
 
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
-  <img src="https://img.shields.io/github/license/niaka3dayo/agent-skills-vrc-udon?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/agent-skills-vrc-udon?style=flat-square&label=npm" alt="npm version" />
-  <img src="https://img.shields.io/npm/dm/agent-skills-vrc-udon?style=flat-square&label=downloads" alt="npm downloads" />
-  <img src="https://img.shields.io/github/actions/workflow/status/niaka3dayo/agent-skills-vrc-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
+  <img src="https://img.shields.io/github/actions/workflow/status/LogicCuteGuy/agent-skills-vrc-lcg-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
 </p>
 
 <h1 align="center">Agent Skills for VRChat UdonSharp</h1>
@@ -34,13 +32,24 @@
 
 <h2 id="about">概要</h2>
 
-**UdonSharp**（C# &rarr; Udon Assembly）を使ったVRChatワールド開発には、通常のC#とは大きく異なる厳格なコンパイル制約があります。Udon runtimeで実行されるコードでは、`List<T>`、`async/await`、`try/catch`、LINQ、ラムダ式などは**コンパイルエラー**になります。一方、Editorで評価されるフィールド初期化子は別のC#実行コンテキストであり、最終的にUdonが保持できるフィールド値を生成するために一部の機能を使用できます。
+**UdonSharp**（C# &rarr; Udon Assembly）を使ったVRChatワールド開発には、通常のC#とは大きく異なる厳格なコンパイル制約があります。**Stock UdonSharp** のruntimeコードでは、`List<T>`、`async/await`、`try/catch`、LINQ、ラムダ式などは**コンパイルエラー**になります。一方、Editorで評価されるフィールド初期化子は別のC#実行コンテキストであり、最終的にUdonが保持できるフィールド値を生成するために一部の機能を使用できます。このリポジトリは、Stockの制約のうち文書化された一部を意図的にサポートする `com.logiccuteguy.lcgudonsharp` プロファイルも扱います。
+
+### 最初にコンパイラプロファイルを選択する
+
+このリポジトリの制約は、一律の禁止事項ではなく**プロファイル固有**です。
+
+| コンパイラプロファイル | ランタイム向けガイダンス |
+|------------------------|--------------------------|
+| **Stock UdonSharp** | `List<T>`、`async/await`、`try/catch`、ランタイムのLINQ/ラムダ、インターフェース、未対応のジェネリックは使用できません。このリポジトリに記載されたStock向け代替手段を使用してください。 |
+| **LCGUdonSharp** | 対象のUnityプロジェクトに `com.logiccuteguy.lcgudonsharp` が導入されている場合、制限付きインターフェース、async lowering、同期例外、`Where`/`Select` LINQクロージャ、クローズドジェネリック、型を証明できる `dynamic`、配列ベースの `Span<T>`、実験的な `[LCGPacket]` を文書化された範囲内で使用できます。 |
+
+LCGUdonSharpは無制限の.NETではありません。`List<T>` などのジェネリックヒープコレクションは引き続き使用できず、[`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) に記載されたasync、例外、LINQ、言語構文のみがサポート対象です。エージェントと検証フックはStockの `NEVER` リストを適用する前に対象のUnityプロジェクトを確認し、確認できない場合は意図的にStock UdonSharpを既定値にします。
 
 このリポジトリは、AIコーディングエージェントが最初から正しいUdonSharpコードを生成できるよう、必要な知識を提供します。
 
 | 問題 | 解決策 |
 |---------|----------|
-| AIがUdon runtimeコードに `List<T>`、`async/await` 等を生成してしまう | ルール + フックによる自動検出と警告 |
+| AIがLCGプロジェクトへStock制約を適用する、または選択中のプロファイル範囲外の構文を生成する | コンパイラプロファイル検出 + プロファイル対応ルールとフック |
 | 同期変数の肥大化 | デシジョンツリー + データバジェット |
 | 誤ったネットワーキングパターン | パターンライブラリ + アンチパターン集 |
 | SDKバージョンごとの機能差異 | バージョンテーブルと機能マッピング |
@@ -52,7 +61,7 @@
 - [VRChat公式ドキュメント](https://creators.vrchat.com/) の代替
 - AIの全動作を保証するもの
 
-> **Issues**: バグ報告や知識リクエストは [GitHub Issues](https://github.com/niaka3dayo/agent-skills-vrc-udon/issues) からお気軽にどうぞ。
+> **Issues**: バグ報告や知識リクエストは [GitHub Issues](https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon/issues) からお気軽にどうぞ。
 > **PR**: Pull Requestは受け付けていません。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
 
 ---
@@ -64,7 +73,7 @@
 ### 方法 1: skills CLI（推奨）
 
 ```bash
-npx skills add niaka3dayo/agent-skills-vrc-udon
+npx skills add LogicCuteGuy/agent-skills-vrc-lcg-udon
 ```
 
 [skills.sh](https://skills.sh) エコシステムを使用して、プロジェクトにスキルをインストールします。
@@ -72,25 +81,24 @@ npx skills add niaka3dayo/agent-skills-vrc-udon
 ### 方法 2: Claude Code プラグイン
 
 ```bash
-claude plugin add niaka3dayo/agent-skills-vrc-udon
+claude plugin marketplace add LogicCuteGuy/agent-skills-vrc-lcg-udon
+claude plugin install vrc-udon-skills@agent-skills-vrc-udon
 ```
 
 ### 方法 3: git clone
 
 ```bash
-git clone https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
 ```
 
 ### 特定バージョンのインストール
 
-公開済みの全バージョンは npm と git タグの両方に恒久的に残ります。削除されることはありません。
+LCGフォークは現在GitHubから直接インストールし、npmパッケージやバージョンタグはまだ公開していません。再現可能なリビジョンを固定するには、特定のcommit SHAをチェックアウトしてください。
 
 ```bash
-# npm（v1.0.0 以降の任意の公開バージョン）
-npm install agent-skills-vrc-udon@2.3.0
-
-# git タグ
-git clone --branch v2.3.0 https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
+cd agent-skills-vrc-lcg-udon
+git checkout <commit-sha>
 ```
 
 ---
@@ -131,6 +139,7 @@ UdonSharpスクリプティングのコアスキルです。コンパイル制�
 | 分野 | 内容 |
 |------|---------|
 | **制約** | Udon runtimeで使用不可なC#機能と代替手段（`List<T>` &rarr; `DataList`、`async` &rarr; `SendCustomEventDelayedSeconds`）、Editorで評価される初期化子との境界 |
+| **LCGUdonSharpプロファイル** | 制限付きインターフェース、async、同期例外、LINQクロージャ、クローズドジェネリック、`dynamic`、`Span<T>`、`[LCGPacket]` に対応する `com.logiccuteguy.lcgudonsharp` の自動検出 |
 | **ネットワーキング** | オーナーシップモデル、Manual/Continuousシンク、FieldChangeCallback、アンチパターン |
 | **NetworkCallable** | SDK 3.8.1で導入されたパラメータ付きネットワークイベント（最大8引数） |
 | **パーシスタンス** | SDK 3.7.4で導入されたPlayerData/PlayerObject API |

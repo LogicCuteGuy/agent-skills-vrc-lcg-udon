@@ -130,6 +130,7 @@ for path in "$ROOT_DIR"/README*.md; do
     forbid_text "$path" '2025年12月2日'
     forbid_text "$path" '2025년 12월 2일'
     forbid_text "$path" '2025 年 12 月 2 日'
+    forbid_text "$path" '2 ธันวาคม 2025'
 done
 for obsolete_claim in '| Real-time shadows | Not supported |' \
     '❌ Real-time shadow casting and receiving' \
@@ -178,6 +179,8 @@ require_text "$ROOT_DIR/README.zh-TW.md" \
     '發佈前，請確認專案使用的是 VRChat 目前支援的 SDK 版本。'
 require_text "$ROOT_DIR/README.ko.md" \
     '게시하기 전에 프로젝트에서 VRChat이 현재 지원하는 SDK 버전을 사용하고 있는지 확인하세요.'
+require_text "$ROOT_DIR/README.th.md" \
+    'ก่อนเผยแพร่ โปรดตรวจสอบว่าโปรเจกต์ใช้เวอร์ชัน SDK ที่ VRChat สนับสนุนในปัจจุบัน'
 
 python3 - "$ROOT_DIR" <<'PY'
 import bisect
@@ -334,15 +337,17 @@ SDK_THRESHOLD = re.compile(
     r"|\b(?:below|under|older|earlier|prior\s+to|before|at\s+least|minimum)\b"
     r"|以降|以上|以前|以下|未満|より(?:新しい|古い)"
     r"|或更高|或更新|或以上|及更高|及更新|及以上|更早|更旧|低于|小于|之前"
-    r"|이상|이후|이전|이하|미만|보다\s*(?:높|낮)|더\s*(?:높|낮))", re.I
+    r"|이상|이후|이전|이하|미만|보다\s*(?:높|낮)|더\s*(?:높|낮)"
+    r"|ขึ้นไป|ใหม่กว่า|เก่ากว่า|อย่างน้อย|ต่ำกว่า|สูงกว่า)", re.I
 )
 ACTION = re.compile(
     r"(?:\b(?:publish(?:ing|ed|es)?|upload(?:ing|ed|s)?)\b"
-    r"|公開|発行|アップロード|发布|發布|發佈|上传|上傳|게시|업로드|퍼블리시|발행)", re.I
+    r"|公開|発行|アップロード|发布|發布|發佈|上传|上傳|게시|업로드|퍼블리시|발행"
+    r"|เผยแพร่|อัปโหลด|อัพโหลด)", re.I
 )
 REQUIRED = re.compile(
     r"(?:\b(?:require(?:s|d)?|need(?:s|ed)?|must|mandatory|necessary|minimum|at\s+least)\b"
-    r"|必要|必須|需要|必须|要求|필요|필수|요구|해야)", re.I
+    r"|必要|必須|需要|必须|要求|필요|필수|요구|해야|จำเป็น|ต้อง)", re.I
 )
 NEGATIVE = re.compile(
     r"(?:\b(?:cannot|can\s*not|can't|unable\s+to|no\s+longer|not\s+possible|"
@@ -351,7 +356,8 @@ NEGATIVE = re.compile(
     r"|できません|できない|不可|非対応|非推奨|サポートされ(?:ていません|ません)"
     r"|无法|無法|不能|不可|不支持|不支援|不再|弃用|棄用"
     r"|지원되지|지원하지\s*않|게시할\s*수\s*없|업로드할\s*수\s*없|"
-    r"사용할\s*수\s*없|비지원|더\s*이상|게시\s*불가|업로드\s*불가)", re.I
+    r"사용할\s*수\s*없|비지원|더\s*이상|게시\s*불가|업로드\s*불가"
+    r"|ไม่สามารถ|ไม่รองรับ|ไม่สนับสนุน|เลิกใช้|ยกเลิก|ใช้ไม่ได้)", re.I
 )
 
 
@@ -502,8 +508,8 @@ MINIMUM_FRAME_TARGET = (
 )
 TARGET_SOURCE = rf"(?:{NUMERIC_FPS}|{PROJECT_TARGET}|{NAMED_FPS_TARGET}|{MINIMUM_FRAME_TARGET})"
 FPS_TARGET = re.compile(TARGET_SOURCE, re.I)
-UPLOAD = r"(?:\b(?:upload|publish)(?:ing|ed|s|es)?\b|上传|上傳|公開|發布|發佈|게시|업로드)"
-OBLIGATION = r"(?:\b(?:require(?:s|d)?|need(?:s|ed)?|must|mandatory|required|necessary)\b|必須|必须|需要|必要|要求|필수|필요|요구)"
+UPLOAD = r"(?:\b(?:upload|publish)(?:ing|ed|s|es)?\b|上传|上傳|公開|發布|發佈|게시|업로드|เผยแพร่|อัปโหลด|อัพโหลด)"
+OBLIGATION = r"(?:\b(?:require(?:s|d)?|need(?:s|ed)?|must|mandatory|required|necessary)\b|必須|必须|需要|必要|要求|필수|필요|요구|จำเป็น|ต้อง)"
 TARGET_COPULA_OBLIGATION = re.compile(
     rf"{TARGET_SOURCE}(?:\s+target)?\s+"
     rf"(?:under\s+minimum\s+requirements?\s+)?(?:is|are)\s+"
@@ -665,6 +671,7 @@ PY
         'README.zh-CN.md|Simplified Chinese positive SDK requirement|发布需要 SDK 3.9.0 或更高版本。|SDK cutoff'
         'README.zh-TW.md|Traditional Chinese positive SDK requirement|發佈需要 SDK 3.9.0 或更新版本。|SDK cutoff'
         'README.ko.md|Korean positive SDK requirement|게시하려면 SDK 3.9.0 이상이 필요합니다.|SDK cutoff'
+        'README.th.md|Thai positive SDK requirement|ก่อนเผยแพร่ ต้องใช้ SDK 3.9.0 ขึ้นไป|SDK cutoff'
         'README.md|English negative SDK cutoff|SDK 3.9.0 and older cannot be uploaded.|SDK cutoff'
         'README.md|English reverse-order SDK requirement|SDK 3.9.0 or newer is required for publishing.|SDK cutoff'
         'README.md|English separated SDK label reverse order|Projects using version 3.9.0 or earlier cannot be published with the VRChat Worlds SDK.|SDK cutoff'
@@ -676,6 +683,7 @@ PY
         'README.md|English action-middle mandatory SDK requirement|Using SDK 3.9.0 or newer for publishing is mandatory.|SDK cutoff'
         'README.ja.md|Japanese action-middle negative SDK cutoff|SDK 3.9.0以前はアップロードできません。|SDK cutoff'
         'README.ko.md|Korean action-middle negative SDK cutoff|SDK 3.9.0 이전은 업로드할 수 없습니다.|SDK cutoff'
+        'README.th.md|Thai action-middle negative SDK cutoff|SDK 3.9.0 เวอร์ชันนี้หรือเก่ากว่าไม่สามารถอัปโหลดได้|SDK cutoff'
         'README.md|English lazy-list SDK requirement|- Publishing requires\nSDK 3.9.0 or newer.|SDK cutoff'
         'README.md|English lazy-blockquote SDK requirement|> Publishing requires\nSDK 3.9.0 or newer.|SDK cutoff'
         'README.md|English indented pseudo-fence SDK requirement|    ```text\nPublishing requires SDK 3.9.0 or newer.\n    ```|SDK cutoff'

@@ -3,6 +3,12 @@
 Complete reference of C# features and their availability in UdonSharp, including SDK version availability,
 compiler behavior details, and annotated code examples.
 
+This is the stock UdonSharp contract. Projects that install
+`com.logiccuteguy.lcgudonsharp` must also read
+[`lcgudonsharp.md`](lcgudonsharp.md); that profile overrides only its explicitly
+listed compiler features, while networking and all other UdonVM constraints
+remain unchanged.
+
 **Active support / last verified**: SDK 3.10.5
 
 Older version numbers in this reference record feature introductions or migration facts only; SDK 3.7.1-3.10.4 are not supported or validation targets for this Skill.

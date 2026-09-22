@@ -444,7 +444,7 @@ for path in skill_root.rglob("*.cs"):
 print("PASS: canonical, vote, playlist, null-guard, and multiline-array structural contracts")
 PY
 
-# Regression-check the existing contributor census and all five README copies;
+# Regression-check the existing contributor census and all six README copies;
 # this Issue is already represented there and should not cause doc churn.
 bash "$ROOT_DIR/tests/docs/community-contributors.test.sh"
 

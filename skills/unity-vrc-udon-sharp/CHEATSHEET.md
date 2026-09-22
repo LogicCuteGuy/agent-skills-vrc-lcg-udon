@@ -4,6 +4,13 @@
 
 SDK 3.7.1-3.10.4 labels below are historical feature-introduction notes only; they are not supported or validation targets for this Skill.
 
+**Compiler profile:** This sheet is the stock UdonSharp baseline. When the
+project installs `com.logiccuteguy.lcgudonsharp`, read
+`references/lcgudonsharp.md`: LCGUdonSharp supports restricted interfaces,
+`async`/`await`, synchronous exceptions, LINQ closures, closed generics,
+`dynamic`, and array-backed `Span<T>`. Unlisted stock restrictions still apply,
+including the ban on `List<T>`.
+
 ## Features Blocked in Udon Runtime
 
 These alternatives apply to code that executes in Udon. Editor-evaluated field initializers may use `List<T>`, LINQ, and lambdas only to generate a final field value that Udon can hold; the same code remains blocked in `Start()`, `Interact()`, and other Udon runtime methods. A `Random.Range` call in an initializer is evaluated in the Editor and stored as a baked default, not runtime randomness.

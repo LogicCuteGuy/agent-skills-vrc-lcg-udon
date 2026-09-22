@@ -2,6 +2,13 @@
 
 UdonSharp compiles C# to Udon Assembly. Code that executes in the Udon runtime must adhere to these constraints, which differ from standard C#. Unity/Editor-side field initializer evaluation has the narrow exception described below.
 
+This rule is the stock UdonSharp baseline. If the live Unity project installs
+`com.logiccuteguy.lcgudonsharp`, read
+[`references/lcgudonsharp.md`](../references/lcgudonsharp.md) first and apply its
+explicit overrides for interfaces, async lowering, synchronous exceptions,
+LINQ closures, and other extended syntax. All unlisted constraints remain in
+force.
+
 **Active support / last verified**: SDK 3.10.5
 
 Older version numbers in this rule record feature introductions or migration facts only; SDK 3.7.1-3.10.4 are not supported or validation targets for this Skill.
@@ -14,6 +21,9 @@ Definition, and do not name custom defines `VRC_ENABLE_*` (reserved/filtered by
 the SDK). See [assembly-definitions.md](../references/assembly-definitions.md).
 
 ## Blocked in Udon Runtime
+
+The table below describes stock UdonSharp. It is not the feature table for the
+LCGUdonSharp compiler profile.
 
 | Feature | Alternative |
 |---------|------------|

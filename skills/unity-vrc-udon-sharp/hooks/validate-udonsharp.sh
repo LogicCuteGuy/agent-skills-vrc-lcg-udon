@@ -47,6 +47,41 @@ if [[ ! -r "$file_path" ]]; then
     exit 0
 fi
 
+# Select the compiler contract. The environment override is useful in unusual
+# project layouts; otherwise discover LCGUdonSharp from the package path or the
+# nearest Unity Packages manifest. Unknown override values fail safe to stock.
+lcg_package_name='com.logiccuteguy.lcgudonsharp'
+compiler_profile="${UDONSHARP_COMPILER_PROFILE:-auto}"
+if [[ "$compiler_profile" != "lcg" && "$compiler_profile" != "stock" ]]; then
+    compiler_profile="auto"
+fi
+
+if [[ "$compiler_profile" == "auto" ]]; then
+    normalized_file_path="${file_path//\\//}"
+    if [[ "$normalized_file_path" == */Packages/"$lcg_package_name"/* ]]; then
+        compiler_profile="lcg"
+    else
+        compiler_profile="stock"
+        search_directory=$(cd "$(dirname "$file_path")" 2>/dev/null && pwd -P) || search_directory=""
+        while [[ -n "$search_directory" ]]; do
+            for manifest_name in manifest.json vpm-manifest.json; do
+                manifest_path="$search_directory/Packages/$manifest_name"
+                if [[ -r "$manifest_path" ]] &&
+                    grep -qE '"com[.]logiccuteguy[.]lcgudonsharp"[[:space:]]*:' "$manifest_path"; then
+                    compiler_profile="lcg"
+                    break 2
+                fi
+            done
+
+            parent_directory=$(dirname "$search_directory")
+            if [[ "$parent_directory" == "$search_directory" ]]; then
+                break
+            fi
+            search_directory="$parent_directory"
+        done
+    fi
+fi
+
 # Build a code-only view of the source. Comments and literal text become spaces,
 # while executable code inside interpolation holes stays visible to every rule.
 # CR/LF positions and byte length are preserved.
@@ -460,18 +495,20 @@ if grep -qE "List[[:space:]]*<|Dictionary[[:space:]]*<|HashSet[[:space:]]*<|Queu
     warnings+=("[UdonSharp] WARNING: Generic collections (List<T>, Dictionary<K,V>) detected. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime; generic collections are not supported in Udon runtime.")
 fi
 
-# async/await
-if grep -qE '(^|[^[:alnum:]_])(async|await)([^[:alnum:]_]|$)' "$masked_file"; then
+# async/await. LCGUdonSharp lowers a documented restricted subset.
+if [[ "$compiler_profile" != "lcg" ]] && grep -qE '(^|[^[:alnum:]_])(async|await)([^[:alnum:]_]|$)' "$masked_file"; then
     warnings+=("[UdonSharp] BLOCKED: async/await not supported. Use SendCustomEventDelayedSeconds() instead.")
 fi
 
-# try/catch
-if grep -qE '(^|[^[:alnum:]_])try[[:space:]]*[{]|(^|[^[:alnum:]_])catch[[:space:]]*[(]|(^|[^[:alnum:]_])finally[[:space:]]*[{]' "$masked_file"; then
+# try/catch. LCGUdonSharp emulates supported synchronous failures.
+if [[ "$compiler_profile" != "lcg" ]] && grep -qE '(^|[^[:alnum:]_])try[[:space:]]*[{]|(^|[^[:alnum:]_])catch[[:space:]]*[(]|(^|[^[:alnum:]_])finally[[:space:]]*[{]' "$masked_file"; then
     warnings+=("[UdonSharp] BLOCKED: try/catch/finally not supported. Use defensive null checks and validation.")
 fi
 
 # LINQ
-if grep -qE "\.Where\(|\.Select\(|\.OrderBy\(|\.FirstOrDefault\(|\.Any\(|\.All\(" "$masked_file"; then
+if [[ "$compiler_profile" == "lcg" ]] && grep -qE '\.(OrderBy|FirstOrDefault|Any|All)[[:space:]]*\(' "$masked_file"; then
+    warnings+=("[LCGUdonSharp] BLOCKED: LINQ lowering supports Where(), Select(), and ToArray(); this operator is outside the supported compiler subset. See references/lcgudonsharp.md.")
+elif [[ "$compiler_profile" != "lcg" ]] && grep -qE "\.Where\(|\.Select\(|\.OrderBy\(|\.FirstOrDefault\(|\.Any\(|\.All\(" "$masked_file"; then
     warnings+=("[UdonSharp] WARNING: LINQ not supported in Udon runtime. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime.")
 fi
 
@@ -480,8 +517,8 @@ if grep -qE '(^|[^[:alnum:]_])yield[[:space:]]+return([^[:alnum:]_]|$)' "$masked
     warnings+=("[UdonSharp] BLOCKED: Coroutines (yield return) not supported. Use SendCustomEventDelayedSeconds().")
 fi
 
-# interface declaration
-if grep -qE '^[[:space:]]*(public[[:space:]]+)?interface[[:space:]]+' "$masked_file"; then
+# interface declaration. LCGUdonSharp lowers its supported interface ABI.
+if [[ "$compiler_profile" != "lcg" ]] && grep -qE '^[[:space:]]*(public[[:space:]]+)?interface[[:space:]]+' "$masked_file"; then
     warnings+=("[UdonSharp] BLOCKED: Interfaces not supported. Use base class inheritance or SendCustomEvent pattern.")
 fi
 
@@ -622,8 +659,10 @@ LC_ALL=C awk '
     }
     END { exit found ? 0 : 1 }
 ' "$flat_file" || lambda_scan_status=$?
-if [[ "$lambda_scan_status" -eq 0 ]]; then
+if [[ "$lambda_scan_status" -eq 0 && "$compiler_profile" != "lcg" ]]; then
     warnings+=("[UdonSharp] WARNING: Lambda expression detected. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime; lambda expressions are not supported in Udon runtime.")
+elif [[ "$lambda_scan_status" -eq 0 ]] && ! grep -qE '\.(Where|Select)[[:space:]]*\(' "$masked_file"; then
+    warnings+=("[LCGUdonSharp] WARNING: General delegate lambdas are not supported. LCGUdonSharp only lowers lambdas used by its documented LINQ Where()/Select() subset. See references/lcgudonsharp.md.")
 elif [[ "$lambda_scan_status" -ne 1 ]]; then
     skip_validation "LAMBDA_SCAN_FAILED"
 fi

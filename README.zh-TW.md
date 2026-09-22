@@ -1,16 +1,14 @@
-[English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | **繁體中文** | [한국어](README.ko.md)
+[English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | **繁體中文** | [한국어](README.ko.md) | [ไทย](README.th.md)
 
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
-  <img src="https://img.shields.io/github/license/niaka3dayo/agent-skills-vrc-udon?style=for-the-badge" alt="授權條款" />
+  <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="授權條款" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/agent-skills-vrc-udon?style=flat-square&label=npm" alt="npm 版本" />
-  <img src="https://img.shields.io/npm/dm/agent-skills-vrc-udon?style=flat-square&label=downloads" alt="npm 下載量" />
-  <img src="https://img.shields.io/github/actions/workflow/status/niaka3dayo/agent-skills-vrc-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
+  <img src="https://img.shields.io/github/actions/workflow/status/LogicCuteGuy/agent-skills-vrc-lcg-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
 </p>
 
 <h1 align="center">Agent Skills for VRChat UdonSharp</h1>
@@ -34,13 +32,24 @@
 
 <h2 id="about">簡介</h2>
 
-使用 **UdonSharp**（C# → Udon Assembly）進行 VRChat 世界開發時，存在嚴格的編譯限制，與標準 C# 有顯著差異。在 Udon runtime 中執行的程式碼裡，`List<T>`、`async/await`、`try/catch`、LINQ、lambda 等功能會導致**編譯錯誤**。由 Editor 求值的欄位初始設定式屬於獨立的 C# 執行環境，可以使用其中部分功能來產生最終由 Udon 支援的欄位值。
+使用 **UdonSharp**（C# → Udon Assembly）進行 VRChat 世界開發時，存在嚴格的編譯限制，與標準 C# 有顯著差異。在 **Stock UdonSharp** runtime 程式碼中，`List<T>`、`async/await`、`try/catch`、LINQ、lambda 等功能會導致**編譯錯誤**。由 Editor 求值的欄位初始設定式屬於獨立的 C# 執行環境，可以使用其中部分功能來產生最終由 Udon 支援的欄位值。本專案也涵蓋 `com.logiccuteguy.lcgudonsharp` 設定檔，它會刻意支援 Stock 限制中已記錄的部分功能。
+
+### 請先選擇編譯器設定檔
+
+本專案中的限制是**設定檔專屬**規則，並非適用於所有編譯器的全面禁令：
+
+| 編譯器設定檔 | Runtime 指引 |
+|--------------|--------------|
+| **Stock UdonSharp** | 不支援 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、介面及未支援的泛型。請使用本專案記載的 Stock 替代方案。 |
+| **LCGUdonSharp** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>` 與實驗性 `[LCGPacket]`。 |
+
+LCGUdonSharp 並非不受限制的 .NET：`List<T>` 和其他泛型 heap collection 仍不可使用，而且僅支援 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 列出的 async、例外、LINQ 與語言形式。代理與驗證掛鉤必須先檢查目前 Unity 專案，才能套用 Stock `NEVER` 清單；若無法檢查專案，則會刻意預設為 Stock UdonSharp。
 
 本專案為 AI 程式碼代理提供必要知識，使其從一開始就能生成正確的 UdonSharp 程式碼。
 
 | 問題 | 解決方案 |
 |------|----------|
-| AI 在 Udon runtime 程式碼中生成 `List<T>`、`async/await` 等不支援的語法 | 規則 + 掛鉤自動偵測並發出警告 |
+| AI 對 LCG 專案套用 Stock 限制，或生成超出所選設定檔範圍的語法 | 編譯器設定檔偵測 + 可辨識設定檔的規則與掛鉤 |
 | 同步變數過度膨脹 | 決策樹 + 資料量預算 |
 | 不正確的網路模式 | 模式庫 + 反模式集 |
 | SDK 版本間功能差異 | 版本對照表與功能對應 |
@@ -52,7 +61,7 @@
 - [VRChat 官方文件](https://creators.vrchat.com/) 的替代品
 - AI 行為的完整保證
 
-> **Issues**：歡迎透過 [GitHub Issues](https://github.com/niaka3dayo/agent-skills-vrc-udon/issues) 提交錯誤回報與知識請求。
+> **Issues**：歡迎透過 [GitHub Issues](https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon/issues) 提交錯誤回報與知識請求。
 > **PRs**：不接受 Pull Request。詳情請參閱 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ---
@@ -64,7 +73,7 @@
 ### 方法 1：skills CLI（推薦）
 
 ```bash
-npx skills add niaka3dayo/agent-skills-vrc-udon
+npx skills add LogicCuteGuy/agent-skills-vrc-lcg-udon
 ```
 
 此方法使用 [skills.sh](https://skills.sh) 生態系統將技能安裝至您的專案。
@@ -72,25 +81,24 @@ npx skills add niaka3dayo/agent-skills-vrc-udon
 ### 方法 2：Claude Code 外掛
 
 ```bash
-claude plugin add niaka3dayo/agent-skills-vrc-udon
+claude plugin marketplace add LogicCuteGuy/agent-skills-vrc-lcg-udon
+claude plugin install vrc-udon-skills@agent-skills-vrc-udon
 ```
 
 ### 方法 3：git clone
 
 ```bash
-git clone https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
 ```
 
 ### 安裝特定版本
 
-所有已發布的版本都會永久保留在 npm 和 git 標籤中，不會被刪除。
+LCG fork 目前直接從 GitHub 安裝，尚未發布 npm 套件或版本標籤。若要固定可重現的 revision，請 checkout 指定的 commit SHA：
 
 ```bash
-# npm（v1.0.0 及以後的任意已發布版本）
-npm install agent-skills-vrc-udon@2.3.0
-
-# git 標籤
-git clone --branch v2.3.0 https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
+cd agent-skills-vrc-lcg-udon
+git checkout <commit-sha>
 ```
 
 ---
@@ -131,6 +139,7 @@ UdonSharp 腳本核心技能。涵蓋編譯限制、網路、事件與範本。
 | 領域 | 內容 |
 |------|------|
 | **限制** | Udon runtime 中被禁止的 C# 功能與替代方案（`List<T>` → `DataList`、`async` → `SendCustomEventDelayedSeconds`），以及 Editor 欄位初始設定式的邊界 |
+| **LCGUdonSharp 設定檔** | 自動偵測 `com.logiccuteguy.lcgudonsharp`，支援受限介面、async、同步例外、LINQ closure、封閉泛型、`dynamic`、`Span<T>` 與 `[LCGPacket]` |
 | **網路** | 所有權模型、Manual/Continuous 同步、FieldChangeCallback、反模式 |
 | **NetworkCallable** | SDK 3.8.1 導入的參數化網路事件（最多 8 個參數） |
 | **持久化** | SDK 3.7.4 導入的 PlayerData/PlayerObject API |

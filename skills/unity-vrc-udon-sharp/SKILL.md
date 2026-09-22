@@ -2,7 +2,8 @@
 name: unity-vrc-udon-sharp
 description: >-
     UdonSharp scripting skill for VRChat SDK 3.10.5 (active and verified target). Use when writing,
-    reviewing, debugging, or migrating UdonSharp C# and UdonBehaviour code.
+    reviewing, debugging, or migrating UdonSharp C# and UdonBehaviour code,
+    including the LCGUdonSharp com.logiccuteguy.lcgudonsharp compiler profile.
     Positive triggers include UdonSharp, NetworkCallable, NetworkCalling,
     CallingPlayer, Udon network authorization, synced runtime state, a local public helper,
     public-method audit, C# to Udon conversion, and UdonSharp Assembly Version Defines.
@@ -16,16 +17,27 @@ license: MIT
 metadata:
     author: niaka3dayo
     version: "4.1.1"
-    tags: vrchat, udonsharp, udon, networking, sync, persistence, dynamics, asmdef, vpm, assembly-definition
+    tags: vrchat, udonsharp, lcgudonsharp, udon, networking, sync, persistence, dynamics, asmdef, vpm, assembly-definition
 ---
 
 # UdonSharp Skill
 
 ## Why This Skill Matters
 
-UdonSharp looks like regular Unity C# scripting — until you hit its hidden walls. Many standard C# features (`List<T>`, `async/await`, `try/catch`, LINQ, generics) **silently fail or refuse to compile** in code that runs in the Udon runtime. Editor-evaluated field initializers are a separate context: they can use some ordinary C# features to generate a final value that Udon can hold. Networking is even more treacherous: modifying a synced variable without ownership produces no error — it just does nothing. Forgetting `RequestSerialization` means your state changes never leave your machine. Standard single-player local testing gives zero signal about these networking bugs because there is only one player.
+Stock UdonSharp looks like regular Unity C# scripting — until you hit its hidden walls. Many standard C# features (`List<T>`, `async/await`, `try/catch`, LINQ, generics) **silently fail or refuse to compile** in code that runs in the Udon runtime. LCGUdonSharp intentionally changes a documented subset of those compiler constraints, so the compiler profile must be identified before applying the NEVER list. Editor-evaluated field initializers are a separate context: they can use some ordinary C# features to generate a final value that Udon can hold. Networking is even more treacherous: modifying a synced variable without ownership produces no error — it just does nothing. Forgetting `RequestSerialization` means your state changes never leave your machine. Standard single-player local testing gives zero signal about these networking bugs because there is only one player.
 
 Every rule in this skill exists because UdonSharp's default behavior is to **fail silently**. Read the Rules before generating any code.
+
+## Choose the Compiler Profile First
+
+- **Stock UdonSharp** is the default. Apply `rules/udonsharp-constraints.md` and
+  `references/constraints.md` as written.
+- **LCGUdonSharp** is active only when the live Unity project installs
+  `com.logiccuteguy.lcgudonsharp`. Read `references/lcgudonsharp.md` before
+  generating interfaces, `async`/`await`, exceptions, LINQ closures, closed
+  generics, `dynamic`, `Span<T>`, or `[LCGPacket]` code.
+- If the project state cannot be inspected, use the stock profile and state the
+  assumption. Do not infer LCG support from desired syntax alone.
 
 ## Before Writing Network Code
 
@@ -50,7 +62,7 @@ compiler constraints, use `unity-vrc-world-sdk-3` and read
 
 ## Core Principles
 
-1. **Constraints First** — For Udon runtime code, assume standard C# features are blocked until verified. Treat Editor-evaluated field initializers separately and require a final Udon-supported value. Check `udonsharp-constraints.md` before using any API.
+1. **Compiler Profile, Then Constraints** — Verify stock versus LCGUdonSharp first. For stock Udon runtime code, assume standard C# features are blocked until verified. Treat Editor-evaluated field initializers separately and require a final Udon-supported value. Check `udonsharp-constraints.md`; when LCG is installed, also load `references/lcgudonsharp.md`.
 2. **Ownership Before Mutation** — Only the owner of an object can modify its synced variables. Always `SetOwner` → modify → `RequestSerialization`.
 3. **Late Joiner Correctness** — State must be correct for players who join after events have occurred. Design for re-serialization, not just live updates.
 4. **Sync Minimization** — Every synced variable costs bandwidth (see data budget in `udonsharp-sync-selection.md`). Derive what you can locally; sync only the source of truth.
@@ -92,6 +104,10 @@ Use `Start()` or a lazy-init guard only for local or per-client randomness. For 
 ## Common Mistakes (NEVER List)
 
 These Udon runtime and Unity serialization constraints cause either **compile-time failures** or **silent data errors**. Check this list before writing UdonSharp code or serialized initial values.
+
+Rows 1, 2, 5, and 9 describe the stock compiler. LCGUdonSharp overrides only
+the subsets documented in `references/lcgudonsharp.md`; for example,
+`List<T>` remains rejected even though closed generic helpers are supported.
 
 | # | NEVER do this | Why it fails silently | Use instead |
 |---|---------------|----------------------|-------------|
@@ -160,6 +176,7 @@ Load only what you need. Over-loading wastes tokens; under-loading causes critic
 
 | Task | MANDATORY READ | Optional | Do NOT Load |
 |------|---------------|----------|-------------|
+| Using `com.logiccuteguy.lcgudonsharp`, LCGUdonSharp syntax, or `[LCGPacket]` | `lcgudonsharp.md`, plus the primary domain reference | `constraints.md`, `networking.md` | None of the relevant primary references |
 | Writing networking/sync code | `networking.md`, `networking-antipatterns.md` | `networking-bandwidth.md`, `sync-examples.md` | `dynamics.md`, `web-loading.md`, `image-loading-vram.md` |
 | Building UI/menus | `patterns-ui.md`, `events.md` | `patterns-core.md`, `api.md` | `networking-bandwidth.md`, `dynamics.md`, `web-loading.md` |
 | Implementing persistence (save/load) | `persistence.md` | `patterns-networking.md`, `events.md` | `dynamics.md`, `web-loading.md`, `image-loading-vram.md` |
@@ -283,6 +300,7 @@ Use SDK 3.10.5 for publishing. Check the matching release notes before relying o
 
 | File | Contents | Search Hints |
 |------|----------|--------------|
+| `lcgudonsharp.md` | LCGUdonSharp compiler profile, extended language boundaries, profile detection, and experimental packet networking | LCGUdonSharp, com.logiccuteguy.lcgudonsharp, interface, async, exceptions, LINQ, closed generics, dynamic, Span, LCGPacket, LCGNetworkZone |
 | `constraints.md` | C# feature availability in UdonSharp; blocked features; syncable types; attributes; DataList vs array decision guidance; DataList/DataDictionary capacity APIs; advanced workarounds (object array pseudo-struct); synced VRCUrl lists | List, async, try/catch, LINQ, generics, DataList, DataDictionary, DataList capacity, DataDictionary capacity, EnsureCapacity, DataList vs array, when to use DataList, VRCUrl array, VRCUrl sync, pseudo-struct, object array cast, multi-field state container |
 | `networking.md` | Ownership model, sync modes, RequestSerialization, NetworkCallable, network-event sender authorization, data limits | UdonSynced, SetOwner, BehaviourSyncMode, FieldChangeCallback, OnDeserialization, NetworkCalling, CallingPlayer, InNetworkCall, legacy event, underscore, authorization, master leave, ownership cascade |
 | `networking-bandwidth.md` | Bandwidth throttling, bit packing, synced data size examples, debugging, owner-centric architecture | IsClogged, bandwidth, throttle, bit packing, data budget, IsMaster |
@@ -340,6 +358,11 @@ Use SDK 3.10.5 for publishing. Check the matching release notes before relying o
 The Bash validator requires `jq`. If it is unavailable, the hook passes its
 input through unchanged and emits `VALIDATOR-WARNING: validation skipped
 (JQ_UNAVAILABLE)` instead of silently reporting successful validation.
+
+Both validators auto-detect `com.logiccuteguy.lcgudonsharp` in the nearest
+Unity `Packages/manifest.json` or `Packages/vpm-manifest.json` and apply the LCG
+compiler profile. Set `UDONSHARP_COMPILER_PROFILE=lcg` or `stock` only when an
+unusual layout makes automatic discovery impossible.
 
 ## Quick Reference
 

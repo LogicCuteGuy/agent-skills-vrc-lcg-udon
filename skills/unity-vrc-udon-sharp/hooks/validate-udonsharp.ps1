@@ -57,6 +57,55 @@ try {
     Stop-Validation 'SOURCE_READ_FAILED'
 }
 
+function Get-UdonSharpCompilerProfile([string]$SourcePath) {
+    $LCGPackageName = 'com.logiccuteguy.lcgudonsharp'
+    $RequestedProfile = $env:UDONSHARP_COMPILER_PROFILE
+    if ($RequestedProfile -eq 'lcg' -or $RequestedProfile -eq 'stock') {
+        return $RequestedProfile
+    }
+
+    $NormalizedPath = $SourcePath.Replace('\', '/')
+    if ($NormalizedPath -match '(?i)(^|/)Packages/com\.logiccuteguy\.lcgudonsharp(/|$)') {
+        return 'lcg'
+    }
+
+    try {
+        $SearchDirectory = [System.IO.Path]::GetDirectoryName(
+            [System.IO.Path]::GetFullPath($SourcePath))
+        while ($SearchDirectory) {
+            foreach ($ManifestName in @('manifest.json', 'vpm-manifest.json')) {
+                $ManifestPath = Join-Path (Join-Path $SearchDirectory 'Packages') $ManifestName
+                if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
+                    continue
+                }
+
+                try {
+                    $ManifestText = Get-Content -LiteralPath $ManifestPath -Raw -Encoding UTF8 -ErrorAction Stop
+                } catch {
+                    continue
+                }
+                if ($ManifestText -match ('"' + [regex]::Escape($LCGPackageName) + '"\s*:')) {
+                    return 'lcg'
+                }
+            }
+
+            $ParentDirectory = [System.IO.Directory]::GetParent($SearchDirectory)
+            if ($null -eq $ParentDirectory) {
+                break
+            }
+            $SearchDirectory = $ParentDirectory.FullName
+        }
+    } catch {
+        # Profile discovery is advisory. Fall back to stock validation if a
+        # parent directory or manifest cannot be read.
+    }
+
+    return 'stock'
+}
+
+$CompilerProfile = Get-UdonSharpCompilerProfile $FilePath
+$IsLCGUdonSharp = $CompilerProfile -eq 'lcg'
+
 function Get-CSharpCodeSource([string]$Source) {
     $LineComment = 1
     $BlockComment = 2
@@ -419,18 +468,20 @@ if ($FlatSource -match 'List\s*<|Dictionary\s*<|HashSet\s*<|Queue\s*<|Stack\s*<'
     $Warnings += "[UdonSharp] WARNING: Generic collections (List<T>, Dictionary<K,V>) detected. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime; generic collections are not supported in Udon runtime."
 }
 
-# Check for async/await
-if ($MaskedSource -match '\basync\b|\bawait\b') {
+# Check for async/await. LCGUdonSharp lowers a documented restricted subset.
+if (-not $IsLCGUdonSharp -and $MaskedSource -match '\basync\b|\bawait\b') {
     $Warnings += "[UdonSharp] BLOCKED: async/await not supported. Use SendCustomEventDelayedSeconds() instead."
 }
 
-# Check for try/catch
-if ($MaskedSource -match '\btry\s*\{|\bcatch\s*\(|\bfinally\s*\{') {
+# Check for try/catch. LCGUdonSharp emulates supported synchronous failures.
+if (-not $IsLCGUdonSharp -and $MaskedSource -match '\btry\s*\{|\bcatch\s*\(|\bfinally\s*\{') {
     $Warnings += "[UdonSharp] BLOCKED: try/catch/finally not supported. Use defensive null checks and validation."
 }
 
 # Check for LINQ
-if ($MaskedSource -match '\.Where\(|\.Select\(|\.OrderBy\(|\.FirstOrDefault\(|\.Any\(|\.All\(') {
+if ($IsLCGUdonSharp -and $MaskedSource -match '\.(OrderBy|FirstOrDefault|Any|All)\s*\(') {
+    $Warnings += "[LCGUdonSharp] BLOCKED: LINQ lowering supports Where(), Select(), and ToArray(); this operator is outside the supported compiler subset. See references/lcgudonsharp.md."
+} elseif (-not $IsLCGUdonSharp -and $MaskedSource -match '\.Where\(|\.Select\(|\.OrderBy\(|\.FirstOrDefault\(|\.Any\(|\.All\(') {
     $Warnings += "[UdonSharp] WARNING: LINQ not supported in Udon runtime. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime."
 }
 
@@ -439,8 +490,8 @@ if ($MaskedSource -match '\byield\s+return\b') {
     $Warnings += "[UdonSharp] BLOCKED: Coroutines (yield return) not supported. Use SendCustomEventDelayedSeconds()."
 }
 
-# Check for interface declaration
-if ($MaskedSource -match '(?m)^\s*(public\s+)?interface\s+') {
+# Check for interface declaration. LCGUdonSharp lowers its supported interface ABI.
+if (-not $IsLCGUdonSharp -and $MaskedSource -match '(?m)^\s*(public\s+)?interface\s+') {
     $Warnings += "[UdonSharp] BLOCKED: Interfaces not supported. Use base class inheritance or SendCustomEvent pattern."
 }
 
@@ -555,8 +606,10 @@ function Remove-DeclarationExpressionBodies([string]$Text) {
 $LambdaCandidate = Remove-DeclarationExpressionBodies $FlatSource
 $HasLambda = $LambdaCandidate -match '\)\s*=>\s*(?:\{|[^;{]+;)' -or
     $LambdaCandidate -match ('(^|[=(,\s])' + $IdentifierPattern + '\s*=>\s*(?:\{|[^;{]+;)')
-if ($HasLambda) {
+if ($HasLambda -and -not $IsLCGUdonSharp) {
     $Warnings += "[UdonSharp] WARNING: Lambda expression detected. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime; lambda expressions are not supported in Udon runtime."
+} elseif ($HasLambda -and $IsLCGUdonSharp -and $MaskedSource -notmatch '\.(Where|Select)\s*\(') {
+    $Warnings += "[LCGUdonSharp] WARNING: General delegate lambdas are not supported. LCGUdonSharp only lowers lambdas used by its documented LINQ Where()/Select() subset. See references/lcgudonsharp.md."
 }
 
 function Get-SyncStats([string]$Source) {

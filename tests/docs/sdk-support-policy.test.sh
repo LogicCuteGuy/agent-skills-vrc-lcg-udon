@@ -37,6 +37,7 @@ README_FILES=(
     "$ROOT_DIR/README.zh-CN.md"
     "$ROOT_DIR/README.zh-TW.md"
     "$ROOT_DIR/README.ko.md"
+    "$ROOT_DIR/README.th.md"
 )
 
 # Keep the tracked literal census and its classifications alongside the
@@ -133,6 +134,7 @@ README_POLICY["$ROOT_DIR/README.ja.md"]='v4.0.0以降は最新の安定版SDKの
 README_POLICY["$ROOT_DIR/README.zh-CN.md"]='从 v4.0.0 起，本项目只支持最新的稳定版 SDK；只有在本仓库完成验证后，支持目标才会切换到新的稳定版本。'
 README_POLICY["$ROOT_DIR/README.zh-TW.md"]='從 v4.0.0 起，本專案只支援最新的穩定版 SDK；只有在本儲存庫完成驗證後，支援目標才會切換到新的穩定版本。'
 README_POLICY["$ROOT_DIR/README.ko.md"]='v4.0.0부터는 최신 안정 SDK만 지원하며, 새 안정 버전으로의 지원 전환은 이 저장소에서 검증한 뒤에만 진행합니다.'
+README_POLICY["$ROOT_DIR/README.th.md"]='ตั้งแต่ v4.0.0 เป็นต้นไป นโยบายการสนับสนุนคือรองรับ SDK เวอร์ชันเสถียรล่าสุดเท่านั้น และจะย้ายเป้าหมายการสนับสนุนไปยังเวอร์ชันเสถียรใหม่ก็ต่อเมื่อคลังเก็บนี้ตรวจสอบยืนยันแล้ว'
 for path in "${README_FILES[@]}"; do
     require_text "$path" "${README_POLICY[$path]}"
 done

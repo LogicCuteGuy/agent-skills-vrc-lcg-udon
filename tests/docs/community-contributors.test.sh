@@ -6,6 +6,7 @@ README_FILES=(
     "$ROOT_DIR/README.md"
     "$ROOT_DIR/README.ja.md"
     "$ROOT_DIR/README.ko.md"
+    "$ROOT_DIR/README.th.md"
     "$ROOT_DIR/README.zh-CN.md"
     "$ROOT_DIR/README.zh-TW.md"
 )
@@ -47,8 +48,8 @@ community_rule = community_rule_match.group(1)
 assert "ordered profile-linked avatar block" in community_rule, (
     "the maintainer rule must preserve the avatar-only README contract"
 )
-assert "across all five READMEs" in community_rule, (
-    "the maintainer rule must keep all five README translations in scope"
+assert "across all six READMEs" in community_rule, (
+    "the maintainer rule must keep all six README translations in scope"
 )
 assert "tests/docs/fixtures/community-contributor-census.json" in community_rule, (
     "the maintainer rule must name the Issue-evidence source of truth"
@@ -213,6 +214,6 @@ for path in readme_paths:
 
 print(
     "PASS: exact fixture-ordered profile-linked avatar blocks, markers, "
-    "attributes, and contributor-section exclusions across all five READMEs"
+    "attributes, and contributor-section exclusions across all six READMEs"
 )
 PY

@@ -1,16 +1,14 @@
-**English** | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md)
+**English** | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [한국어](README.ko.md) | [ไทย](README.th.md)
 
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
-  <img src="https://img.shields.io/github/license/niaka3dayo/agent-skills-vrc-udon?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/agent-skills-vrc-udon?style=flat-square&label=npm" alt="npm version" />
-  <img src="https://img.shields.io/npm/dm/agent-skills-vrc-udon?style=flat-square&label=downloads" alt="npm downloads" />
-  <img src="https://img.shields.io/github/actions/workflow/status/niaka3dayo/agent-skills-vrc-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
+  <img src="https://img.shields.io/github/actions/workflow/status/LogicCuteGuy/agent-skills-vrc-lcg-udon/ci.yml?branch=dev&style=flat-square&label=CI" alt="CI" />
 </p>
 
 <h1 align="center">Agent Skills for VRChat UdonSharp</h1>
@@ -34,13 +32,24 @@
 
 <h2 id="about">About</h2>
 
-VRChat world development with **UdonSharp** (C# &rarr; Udon Assembly) has strict compile constraints that differ significantly from standard C#. In Udon runtime code, features like `List<T>`, `async/await`, `try/catch`, LINQ, and lambdas cause **compile errors**. Editor-evaluated field initializers are a separate C# context and may use some of these features to generate a final field value that Udon supports.
+VRChat world development with **UdonSharp** (C# &rarr; Udon Assembly) has strict compile constraints that differ significantly from standard C#. In stock Udon runtime code, features like `List<T>`, `async/await`, `try/catch`, LINQ, and lambdas cause **compile errors**. Editor-evaluated field initializers are a separate C# context and may use some of these features to generate a final field value that Udon supports. This repository also supports the `com.logiccuteguy.lcgudonsharp` compiler profile, whose documented lowering passes intentionally enable a restricted subset of interfaces, async, exceptions, LINQ closures, and extended language features.
+
+### Choose the compiler profile first
+
+The restrictions in this repository are **profile-specific**, not universal bans:
+
+| Compiler profile | Runtime guidance |
+|------------------|------------------|
+| **Stock UdonSharp** | `List<T>`, `async/await`, `try/catch`, runtime LINQ/lambdas, interfaces, and unsupported generics are blocked. Use the stock alternatives documented by this repository. |
+| **LCGUdonSharp** | When the live Unity project installs `com.logiccuteguy.lcgudonsharp`, restricted interfaces, async lowering, synchronous exceptions, `Where`/`Select` LINQ closures, closed generics, proven `dynamic`, array-backed `Span<T>`, and experimental `[LCGPacket]` are available within their documented boundaries. |
+
+LCGUdonSharp is not unrestricted .NET: `List<T>` and other generic heap collections remain blocked, and only the async, exception, LINQ, and language shapes listed in [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) are supported. Agents and validation hooks must inspect the live Unity project before applying the stock `NEVER` list; when the project cannot be inspected, they deliberately default to Stock UdonSharp.
 
 This repository provides AI coding agents with the knowledge to generate correct UdonSharp code from the start.
 
 | Problem | Solution |
 |---------|----------|
-| AI generates Udon-incompatible `List<T>`, `async/await`, etc. in runtime code | Rules + hooks auto-detect and warn |
+| AI applies stock restrictions to an LCG project, or emits syntax outside the selected profile | Compiler-profile detection + profile-aware rules and hooks |
 | Sync variable bloat | Decision tree + data budget |
 | Incorrect networking patterns | Pattern library + anti-patterns |
 | SDK version feature differences | Version table with feature mapping |
@@ -52,7 +61,7 @@ This repository provides AI coding agents with the knowledge to generate correct
 - A replacement for [official VRChat documentation](https://creators.vrchat.com/)
 - A guarantee of all AI behaviors
 
-> **Issues**: Bug reports and knowledge requests are welcome via [GitHub Issues](https://github.com/niaka3dayo/agent-skills-vrc-udon/issues).
+> **Issues**: Bug reports and knowledge requests are welcome via [GitHub Issues](https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon/issues).
 > **PRs**: Pull Requests are not accepted. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
@@ -64,7 +73,7 @@ This repository provides AI coding agents with the knowledge to generate correct
 ### Method 1: skills CLI (recommended)
 
 ```bash
-npx skills add niaka3dayo/agent-skills-vrc-udon
+npx skills add LogicCuteGuy/agent-skills-vrc-lcg-udon
 ```
 
 This uses the [skills.sh](https://skills.sh) ecosystem to install skills into your project.
@@ -72,25 +81,24 @@ This uses the [skills.sh](https://skills.sh) ecosystem to install skills into yo
 ### Method 2: Claude Code plugin
 
 ```bash
-claude plugin add niaka3dayo/agent-skills-vrc-udon
+claude plugin marketplace add LogicCuteGuy/agent-skills-vrc-lcg-udon
+claude plugin install vrc-udon-skills@agent-skills-vrc-udon
 ```
 
 ### Method 3: git clone
 
 ```bash
-git clone https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
 ```
 
 ### Installing a specific version
 
-All published versions remain permanently available on npm and as git tags — nothing is ever removed.
+The LCG fork is currently installed directly from GitHub and does not yet publish an npm package or version tags. To pin a reproducible revision, check out a specific commit SHA:
 
 ```bash
-# npm (any published version, v1.0.0 and later)
-npm install agent-skills-vrc-udon@2.3.0
-
-# git tag
-git clone --branch v2.3.0 https://github.com/niaka3dayo/agent-skills-vrc-udon.git
+git clone https://github.com/LogicCuteGuy/agent-skills-vrc-lcg-udon.git
+cd agent-skills-vrc-lcg-udon
+git checkout <commit-sha>
 ```
 
 ---
@@ -111,7 +119,7 @@ skills/                                  # All skills
       validate-udonsharp.sh
       validate-udonsharp.ps1
     assets/templates/                    # Code templates (17 files)
-    references/                          # Detailed documentation (25 files)
+    references/                          # Detailed documentation (26 files)
   unity-vrc-world-sdk-3/                # VRC World SDK skill
     SKILL.md, LICENSE.txt, CHEATSHEET.md, references/ (8 files)
 templates/                               # AI tool config templates
@@ -131,6 +139,7 @@ UdonSharp scripting core skill. Covers compile constraints, networking, events, 
 | Area | Content |
 |------|---------|
 | **Constraints** | C# features blocked in Udon runtime, their alternatives (`List<T>` &rarr; `DataList`, `async` &rarr; `SendCustomEventDelayedSeconds`), and the Editor-evaluated initializer boundary |
+| **LCGUdonSharp profile** | Auto-detected `com.logiccuteguy.lcgudonsharp` support for restricted interfaces, async, synchronous exceptions, LINQ closures, closed generics, `dynamic`, `Span<T>`, and `[LCGPacket]` |
 | **Networking** | Ownership model, Manual/Continuous sync, FieldChangeCallback, anti-patterns |
 | **NetworkCallable** | Introduced in SDK 3.8.1: parameterized network events (up to 8 args) |
 | **Persistence** | Introduced in SDK 3.7.4: PlayerData/PlayerObject API |

@@ -21,11 +21,13 @@
     "README.zh-CN.md",
     "README.zh-TW.md",
     "README.ko.md",
+    "README.th.md",
     "LICENSE"
   ],
   "keywords": [
     "vrchat",
     "udonsharp",
+    "lcgudonsharp",
     "udon",
     "ai-agent",
     "ai-skills",
