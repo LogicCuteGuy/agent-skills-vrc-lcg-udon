@@ -87,7 +87,7 @@ try {
     Assert-Contains 'lcg flags non-Where/Select lambda' $UnsupportedOutput '[LCGUdonSharp] WARNING: General delegate lambdas are not supported'
 
     $ListOutput = Invoke-Validator $ListFixture 'lcg'
-    Assert-Contains 'lcg keeps List<T> restriction' $ListOutput 'Generic collections (List<T>'
+    Assert-NotContains 'lcg permits lowered List<T>' $ListOutput 'Generic collections (List<T>'
 
     $ProjectRoot = Join-Path $TempRoot 'UnityProject'
     $AssetsRoot = Join-Path $ProjectRoot 'Assets'

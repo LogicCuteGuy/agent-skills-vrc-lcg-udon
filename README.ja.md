@@ -3,6 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.2-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.2" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="License" />
 </p>
@@ -41,9 +42,9 @@
 | コンパイラプロファイル | ランタイム向けガイダンス |
 |------------------------|--------------------------|
 | **Stock UdonSharp** | `List<T>`、`async/await`、`try/catch`、ランタイムのLINQ/ラムダ、インターフェース、未対応のジェネリックは使用できません。このリポジトリに記載されたStock向け代替手段を使用してください。 |
-| **LCGUdonSharp** | 対象のUnityプロジェクトに `com.logiccuteguy.lcgudonsharp` が導入されている場合、制限付きインターフェース、async lowering、同期例外、`Where`/`Select` LINQクロージャ、クローズドジェネリック、型を証明できる `dynamic`、配列ベースの `Span<T>`、実験的な `[LCGPacket]` を文書化された範囲内で使用できます。 |
+| **LCGUdonSharp 0.3.2** | 対象のUnityプロジェクトに `com.logiccuteguy.lcgudonsharp` が導入されている場合、制限付きインターフェース、async lowering、同期例外、`Where`/`Select` LINQクロージャ、クローズドジェネリック、型を証明できる `dynamic`、配列ベースの `Span<T>`、JSON対応の正確にloweringされる `List<T>` / `Dictionary<TKey,TValue>`、実験的な `[LCGPacket]` を文書化された範囲内で使用できます。 |
 
-LCGUdonSharpは無制限の.NETではありません。`List<T>` などのジェネリックヒープコレクションは引き続き使用できず、[`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) に記載されたasync、例外、LINQ、言語構文のみがサポート対象です。エージェントと検証フックはStockの `NEVER` リストを適用する前に対象のUnityプロジェクトを確認し、確認できない場合は意図的にStock UdonSharpを既定値にします。
+LCGUdonSharpは無制限の.NETではありません。コンパイラがloweringする正確な `List<T>` と `Dictionary<TKey,TValue>` の形だけがサポートされ、その他のジェネリックヒープコレクションは引き続き使用できません。[`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) に記載されたasync、例外、LINQ、コレクション/JSON、言語構文のみがサポート対象です。エージェントと検証フックはStockの `NEVER` リストを適用する前に対象のUnityプロジェクトを確認し、確認できない場合は意図的にStock UdonSharpを既定値にします。
 
 このリポジトリは、AIコーディングエージェントが最初から正しいUdonSharpコードを生成できるよう、必要な知識を提供します。
 

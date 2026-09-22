@@ -8,8 +8,9 @@ SDK 3.7.1-3.10.4 labels below are historical feature-introduction notes only; th
 project installs `com.logiccuteguy.lcgudonsharp`, read
 `references/lcgudonsharp.md`: LCGUdonSharp supports restricted interfaces,
 `async`/`await`, synchronous exceptions, LINQ closures, closed generics,
-`dynamic`, and array-backed `Span<T>`. Unlisted stock restrictions still apply,
-including the ban on `List<T>`.
+`dynamic`, array-backed `Span<T>`, and exact compiler-lowered `List<T>` /
+`Dictionary<TKey,TValue>` collections with documented JSON and Manual-sync
+support. Unlisted stock restrictions still apply.
 
 ## Features Blocked in Udon Runtime
 

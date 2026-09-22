@@ -3,6 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.2-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.2" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="AI Agent 技能" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="许可证" />
 </p>
@@ -41,9 +42,9 @@
 | 编译器配置 | Runtime 指引 |
 |------------|--------------|
 | **Stock UdonSharp** | 不支持 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、接口及未支持的泛型。请使用本仓库记录的 Stock 替代方案。 |
-| **LCGUdonSharp** | 当当前 Unity 项目安装了 `com.logiccuteguy.lcgudonsharp` 时，可以在文档规定的范围内使用受限接口、async lowering、同步异常、`Where`/`Select` LINQ closure、封闭泛型、可证明类型的 `dynamic`、数组支持的 `Span<T>` 和实验性 `[LCGPacket]`。 |
+| **LCGUdonSharp 0.3.2** | 当当前 Unity 项目安装了 `com.logiccuteguy.lcgudonsharp` 时，可以在文档规定的范围内使用受限接口、async lowering、同步异常、`Where`/`Select` LINQ closure、封闭泛型、可证明类型的 `dynamic`、数组支持的 `Span<T>`、带 JSON 支持的精确 lowering `List<T>` / `Dictionary<TKey,TValue>` 以及实验性 `[LCGPacket]`。 |
 
-LCGUdonSharp 并不是不受限制的 .NET：`List<T>` 和其他泛型 heap collection 仍不可用，并且只支持 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 中列出的 async、异常、LINQ 和语言形式。代理与验证钩子必须先检查当前 Unity 项目，再应用 Stock `NEVER` 清单；如果无法检查项目，则会有意默认使用 Stock UdonSharp。
+LCGUdonSharp 并不是不受限制的 .NET：仅支持编译器精确 lowering 的 `List<T>` 和 `Dictionary<TKey,TValue>` 形式，其他泛型 heap collection 仍不可用，并且只支持 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 中列出的 async、异常、LINQ、collection/JSON 和语言形式。代理与验证钩子必须先检查当前 Unity 项目，再应用 Stock `NEVER` 清单；如果无法检查项目，则会有意默认使用 Stock UdonSharp。
 
 本仓库为 AI 编码代理提供必要的知识，使其从一开始就能生成正确的 UdonSharp 代码。
 

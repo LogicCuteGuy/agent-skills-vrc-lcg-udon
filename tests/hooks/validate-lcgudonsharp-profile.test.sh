@@ -80,7 +80,7 @@ assert_contains 'lcg rejects unsupported LINQ operator' "$TMPROOT/unsupported.er
 assert_contains 'lcg flags non-Where/Select lambda' "$TMPROOT/unsupported.err" '[LCGUdonSharp] WARNING: General delegate lambdas are not supported'
 
 invoke_validator "$LIST_FIXTURE" lcg "$TMPROOT/list.err"
-assert_contains 'lcg keeps List<T> restriction' "$TMPROOT/list.err" 'Generic collections (List<T>'
+assert_not_contains 'lcg permits lowered List<T>' "$TMPROOT/list.err" 'Generic collections (List<T>'
 
 PROJECT_ROOT="$TMPROOT/UnityProject"
 mkdir -p "$PROJECT_ROOT/Assets" "$PROJECT_ROOT/Packages"

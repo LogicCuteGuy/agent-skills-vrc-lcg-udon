@@ -1,5 +1,7 @@
 # SDK Verification Workspace
 
+> Repository documentation version: **4.2.0** · LCGUdonSharp contract: **0.3.2**
+
 This directory is a **gitignored** workspace for verifying VRChat SDK APIs against the actual shipped SDK binary. Drop a Unity project with the VRChat World SDK installed here, then `grep` the SDK DLLs to confirm whether a specific API exists.
 
 Only this `README.md` is tracked. Anything else placed under `unity-project-for-sdk-search/` is gitignored — see the repo root `.gitignore` for the rule.

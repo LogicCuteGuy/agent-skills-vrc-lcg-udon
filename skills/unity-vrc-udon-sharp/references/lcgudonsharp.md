@@ -2,7 +2,7 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.2.0` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.2` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
@@ -33,10 +33,32 @@ present in a source file.
 | `async` / `await` | Parameterless `async void`, `Task.Yield()`, constant positive `Task.Delay(int)`, and one supported VRChat SDK await per behaviour | Single-flight only; async locals, parameters, nested awaits, explicit returns, direct `Task<T>` result assignment, and multiple simultaneous SDK awaits are rejected |
 | Exceptions | Synchronous `try`/`catch`/`finally`, approved typed and catch-all handlers, `throw new`, rethrow, and compiler guards for supported null/bounds/integral-zero failures | `await` inside `try`, catch filters, arbitrary thrown expressions, unsupported exception types, extern/VM faults, cross-behaviour propagation, floating-point divide-by-zero, overflow, casts, and SDK domain failures are outside the contract |
 | LINQ closures | `Where()`, `Select()`, and `ToArray()` with captured values are lowered to loops | Other LINQ operators and general runtime delegates are not implied |
-| Generics | Closed generic static helpers and closed generic interface specializations | Open generics, generic behaviours, generic heap objects, and `List<T>` remain rejected |
+| Generics | Closed generic static helpers, closed generic interface specializations, and exact compiler-lowered `List<T>` / `Dictionary<TKey,TValue>` collections | Open generics, generic behaviours, other generic heap objects, collection interfaces, derived collections, and custom comparers remain rejected |
 | `ref` / `out` | Locals, fields, array elements, `out var`, and supported recursion | Keep ordinary Udon type/extern restrictions |
 | `dynamic` | Accepted only when the compiler proves one concrete type | Ambiguous or changing runtime types are rejected |
 | `Span<T>` | Array-backed local spans with the compiler's supported operations | Do not treat `Span<T>` as a general heap or API-boundary type |
+| Collections and JSON | Exact `List<T>` and `Dictionary<TKey,TValue>` syntax lowers to `DataList` / `DataDictionary`; a VRCJson-backed `System.Text.Json` facade supports documented round trips | Collection interfaces, derived collections, custom comparers, nullable collection annotations, collection LINQ, and Inspector-serialized collections are rejected |
+
+## Collections, JSON, and synchronization
+
+LCGUdonSharp 0.3.x supports exact `List<T>` and
+`Dictionary<TKey,TValue>` definitions with documented constructors,
+initializers, typed indexers, `foreach`, common mutation/search operations,
+`TryGetValue`, keys/values, and typed `ToArray`. Fields, nested collections,
+and arrays of collections use the same lowered proxy storage; null and empty
+values remain distinct.
+
+The `System.Text.Json` facade is backed by `VRCJson`. String-key dictionaries
+serialize as JSON objects; other JSON-safe keys use the package's versioned
+dictionary envelope. Object references, NaN, and Infinity are rejected.
+Installing another real `System.Text.Json` assembly can cause a namespace/type
+conflict.
+
+Synchronized collections require a Manual-sync behaviour and a non-Inspector
+field marked `[UdonSynced, NonSerialized]`. The compiler transports a hidden
+JSON payload, while ownership transfer and `RequestSerialization()` remain the
+author's responsibility. Continuous sync, `FieldChangeCallback`, Inspector
+serialization, and statically non-JSON-safe element types are rejected.
 
 The compiler remains the final authority. If its diagnostic is narrower than this
 summary, follow the diagnostic and update this reference from the package's
@@ -74,7 +96,9 @@ world.
 
 Do not relax these merely because the LCG profile is active:
 
-- `List<T>` and other generic heap collections remain unavailable.
+- Only the exact compiler-lowered `List<T>` and `Dictionary<TKey,TValue>`
+  collection shapes documented above are available; other generic heap
+  collections remain unavailable.
 - `yield return`, `StartCoroutine`, runtime delegates, and `AddListener` remain
   unavailable unless a future package version explicitly adds them.
 - Native Udon ownership and `[UdonSynced]` serialization rules are unchanged.

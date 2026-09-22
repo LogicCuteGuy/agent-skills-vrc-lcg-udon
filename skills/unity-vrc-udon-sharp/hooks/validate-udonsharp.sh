@@ -490,9 +490,12 @@ fi
 # === Validation Rules ===
 warnings=()
 
-# Context-sensitive generic collections
-if grep -qE "List[[:space:]]*<|Dictionary[[:space:]]*<|HashSet[[:space:]]*<|Queue[[:space:]]*<|Stack[[:space:]]*<" "$flat_file"; then
+# Context-sensitive generic collections. LCGUdonSharp 0.3.x lowers exact
+# List<T> and Dictionary<TKey,TValue> shapes, but not other collections.
+if [[ "$compiler_profile" != "lcg" ]] && grep -qE "List[[:space:]]*<|Dictionary[[:space:]]*<|HashSet[[:space:]]*<|Queue[[:space:]]*<|Stack[[:space:]]*<" "$flat_file"; then
     warnings+=("[UdonSharp] WARNING: Generic collections (List<T>, Dictionary<K,V>) detected. Check whether this code only generates a Udon-compatible field initial value in the Unity Editor or runs in Udon runtime; generic collections are not supported in Udon runtime.")
+elif [[ "$compiler_profile" == "lcg" ]] && grep -qE "HashSet[[:space:]]*<|Queue[[:space:]]*<|Stack[[:space:]]*<" "$flat_file"; then
+    warnings+=("[LCGUdonSharp] BLOCKED: Only exact List<T> and Dictionary<TKey,TValue> collections are lowered; HashSet<T>, Queue<T>, and Stack<T> remain unsupported. See references/lcgudonsharp.md.")
 fi
 
 # async/await. LCGUdonSharp lowers a documented restricted subset.

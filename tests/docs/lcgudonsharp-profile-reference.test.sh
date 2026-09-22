@@ -26,8 +26,13 @@ for text in 'Interfaces' 'async' 'Exceptions' 'LINQ closures' 'Generics' 'dynami
     require_text "$REFERENCE" "$text"
 done
 
-require_text "$REFERENCE" 'List<T>` remain rejected'
+require_text "$REFERENCE" 'exact compiler-lowered `List<T>`'
 require_text "$REFERENCE" 'VRChat Worlds SDK `3.10.5`'
+require_text "$REFERENCE" 'LCGUdonSharp'
+require_text "$REFERENCE" '`0.3.2`'
+require_text "$REFERENCE" 'Dictionary<TKey,TValue>'
+require_text "$REFERENCE" 'System.Text.Json'
+require_text "$REFERENCE" '[UdonSynced, NonSerialized]'
 require_text "$REFERENCE" 'UDONSHARP_COMPILER_PROFILE=lcg'
 require_text "$SKILL" 'Choose the Compiler Profile First'
 require_text "$SKILL" '`lcgudonsharp.md`'
