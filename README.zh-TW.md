@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.2-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.2" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.4-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.4" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="授權條款" />
 </p>
@@ -29,6 +29,8 @@
   <a href="#disclaimer">免責聲明</a>
 </p>
 
+> 請透過 VCC/ALCOM 或發行版中具名的 ZIP 套件安裝 LCGUdonSharp 0.3.4。GitHub 自動產生的原始碼封存檔不是可安裝的 Unity 套件。請在編譯器安裝完成後再匯入選用範例。 [LCGUdonSharp 0.3.4](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.4)
+
 ---
 
 <h2 id="about">簡介</h2>
@@ -42,7 +44,7 @@
 | 編譯器設定檔 | Runtime 指引 |
 |--------------|--------------|
 | **Stock UdonSharp** | 不支援 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、介面及未支援的泛型。請使用本專案記載的 Stock 替代方案。 |
-| **LCGUdonSharp 0.3.2** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
+| **LCGUdonSharp 0.3.4** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
 
 LCGUdonSharp 並非不受限制的 .NET：僅支援編譯器精確 lowering 的 `List<T>` 與 `Dictionary<TKey,TValue>` 形式，其他泛型 heap collection 仍不可使用，而且僅支援 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 列出的 async、例外、LINQ、collection/JSON 與語言形式。代理與驗證掛鉤必須先檢查目前 Unity 專案，才能套用 Stock `NEVER` 清單；若無法檢查專案，則會刻意預設為 Stock UdonSharp。
 

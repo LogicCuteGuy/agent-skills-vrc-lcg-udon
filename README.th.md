@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.2-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.2" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.4-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.4" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="สกิลเอเจนต์ AI" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="สัญญาอนุญาต" />
 </p>
@@ -29,6 +29,8 @@
   <a href="#disclaimer">ข้อจำกัดความรับผิดชอบ</a>
 </p>
 
+> ติดตั้ง LCGUdonSharp 0.3.4 ผ่าน VCC/ALCOM หรือไฟล์ ZIP แพ็กเกจที่แนบในรีลีส ไฟล์ซอร์สที่ GitHub สร้างอัตโนมัติไม่ใช่แพ็กเกจสำหรับติดตั้งใน Unity ให้นำเข้าตัวอย่างเสริมหลังติดตั้งคอมไพเลอร์เสร็จแล้ว [LCGUdonSharp 0.3.4](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.4)
+
 ---
 
 <h2 id="about">เกี่ยวกับ</h2>
@@ -42,7 +44,7 @@
 | โปรไฟล์คอมไพเลอร์ | แนวทางสำหรับโค้ด runtime |
 |--------------------|---------------------------|
 | **Stock UdonSharp** | ไม่รองรับ `List<T>`, `async/await`, `try/catch`, LINQ/lambda ตอน runtime, interface และ generic ที่อยู่นอกชุดรองรับ ให้ใช้ทางเลือกของ Stock ที่เอกสารนี้ระบุ |
-| **LCGUdonSharp 0.3.2** | เมื่อโปรเจกต์ Unity ที่กำลังใช้งานติดตั้ง `com.logiccuteguy.lcgudonsharp` จะใช้ interface แบบจำกัด, async lowering, exception แบบ synchronous, LINQ closure ของ `Where`/`Select`, closed generic, `dynamic` ที่พิสูจน์ชนิดได้, `Span<T>` ที่มี array รองรับ, `List<T>` / `Dictionary<TKey,TValue>` รูปแบบตรงที่ lowering พร้อม JSON และ `[LCGPacket]` แบบทดลองได้ภายในขอบเขตที่ระบุไว้ |
+| **LCGUdonSharp 0.3.4** | เมื่อโปรเจกต์ Unity ที่กำลังใช้งานติดตั้ง `com.logiccuteguy.lcgudonsharp` จะใช้ interface แบบจำกัด, async lowering, exception แบบ synchronous, LINQ closure ของ `Where`/`Select`, closed generic, `dynamic` ที่พิสูจน์ชนิดได้, `Span<T>` ที่มี array รองรับ, `List<T>` / `Dictionary<TKey,TValue>` รูปแบบตรงที่ lowering พร้อม JSON และ `[LCGPacket]` แบบทดลองได้ภายในขอบเขตที่ระบุไว้ |
 
 LCGUdonSharp ไม่ใช่ .NET แบบไร้ข้อจำกัด: รองรับเฉพาะ `List<T>` และ `Dictionary<TKey,TValue>` รูปแบบตรงที่คอมไพเลอร์ lowering ส่วน generic heap collection อื่นยังใช้ไม่ได้ และรองรับเฉพาะรูปแบบ async, exception, LINQ, collection/JSON และภาษาที่ระบุใน [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) เท่านั้น เอเจนต์และ validation hook ต้องตรวจโปรเจกต์ Unity ที่กำลังใช้งานก่อนนำรายการ `NEVER` ของ Stock มาใช้ หากตรวจโปรเจกต์ไม่ได้ ระบบจะเลือก Stock UdonSharp โดยตั้งใจ
 

@@ -29,7 +29,7 @@ done
 require_text "$REFERENCE" 'exact compiler-lowered `List<T>`'
 require_text "$REFERENCE" 'VRChat Worlds SDK `3.10.5`'
 require_text "$REFERENCE" 'LCGUdonSharp'
-require_text "$REFERENCE" '`0.3.2`'
+require_text "$REFERENCE" '`0.3.4`'
 require_text "$REFERENCE" 'Dictionary<TKey,TValue>'
 require_text "$REFERENCE" 'System.Text.Json'
 require_text "$REFERENCE" '[UdonSynced, NonSerialized]'

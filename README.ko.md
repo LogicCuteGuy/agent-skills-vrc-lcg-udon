@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.2-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.2" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.4-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.4" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="에이전트 스킬" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="라이선스" />
 </p>
@@ -29,6 +29,8 @@
   <a href="#disclaimer">면책 조항</a>
 </p>
 
+> LCGUdonSharp 0.3.4는 VCC/ALCOM 또는 이름이 지정된 릴리스 ZIP으로 설치하세요. GitHub의 자동 소스 아카이브는 설치 가능한 Unity 패키지가 아닙니다. 선택적 예제는 컴파일러 설정이 끝난 뒤 가져오세요. [LCGUdonSharp 0.3.4](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.4)
+
 ---
 
 <h2 id="about">소개</h2>
@@ -42,7 +44,7 @@
 | 컴파일러 프로필 | 런타임 지침 |
 |-----------------|-------------|
 | **Stock UdonSharp** | `List<T>`, `async/await`, `try/catch`, 런타임 LINQ/람다, 인터페이스 및 지원되지 않는 제네릭은 사용할 수 없습니다. 이 저장소에 문서화된 Stock 대안을 사용하세요. |
-| **LCGUdonSharp 0.3.2** | 현재 Unity 프로젝트에 `com.logiccuteguy.lcgudonsharp`가 설치되어 있으면 제한된 인터페이스, async lowering, 동기 예외, `Where`/`Select` LINQ 클로저, 닫힌 제네릭, 입증 가능한 `dynamic`, 배열 기반 `Span<T>`, JSON을 지원하는 정확히 lowering되는 `List<T>` / `Dictionary<TKey,TValue>`, 실험적 `[LCGPacket]`을 문서화된 범위 안에서 사용할 수 있습니다. |
+| **LCGUdonSharp 0.3.4** | 현재 Unity 프로젝트에 `com.logiccuteguy.lcgudonsharp`가 설치되어 있으면 제한된 인터페이스, async lowering, 동기 예외, `Where`/`Select` LINQ 클로저, 닫힌 제네릭, 입증 가능한 `dynamic`, 배열 기반 `Span<T>`, JSON을 지원하는 정확히 lowering되는 `List<T>` / `Dictionary<TKey,TValue>`, 실험적 `[LCGPacket]`을 문서화된 범위 안에서 사용할 수 있습니다. |
 
 LCGUdonSharp는 제약 없는 .NET이 아닙니다. 컴파일러가 lowering하는 정확한 `List<T>` 및 `Dictionary<TKey,TValue>` 형태만 지원되고 다른 제네릭 힙 컬렉션은 여전히 사용할 수 없으며, [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md)에 명시된 async, 예외, LINQ, 컬렉션/JSON 및 언어 형태만 지원됩니다. 에이전트와 검증 훅은 Stock `NEVER` 목록을 적용하기 전에 현재 Unity 프로젝트를 확인해야 합니다. 프로젝트를 확인할 수 없으면 의도적으로 Stock UdonSharp를 기본값으로 사용합니다.
 

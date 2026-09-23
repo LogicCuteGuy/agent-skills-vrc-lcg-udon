@@ -2,11 +2,30 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.3.2` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.4` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
 other runtime rules in this Skill still apply.
+
+## Installation and upgrade (0.3.4)
+
+Install through VCC/ALCOM or extract the named release asset
+`com.logiccuteguy.lcgudonsharp-0.3.4.zip` before using a local package reference.
+GitHub's automatic source archives are developer checkouts, not installable
+Unity packages. The 0.3.2 distribution could lack the compiler payload; update
+affected projects to 0.3.4 and let Unity refresh so the installer can repair it.
+
+Installable packages contain the compiler under `Payload~/UdonSharp` and optional
+examples under `Samples~/Examples`. Import examples only after setup completes.
+The installer validates compiler features, dependencies, and metadata before
+replacing the compiler. Version 0.3.4 refreshes the collection example's Manual
+sync program asset and the scene's JSON/binary result fields; it does not add
+new language features. Upstream reports seven packaging tests passing, but did
+not retest Unity runtime behavior for this release.
+
+Source: [LCGUdonSharp 0.3.4 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.4)
+and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.4/README.md#installation--setup).
 
 ## Selecting the profile
 
