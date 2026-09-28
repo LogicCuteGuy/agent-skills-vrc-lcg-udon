@@ -2,30 +2,30 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.3.4` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.5` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
 other runtime rules in this Skill still apply.
 
-## Installation and upgrade (0.3.4)
+## Installation and upgrade (0.3.5)
 
 Install through VCC/ALCOM or extract the named release asset
-`com.logiccuteguy.lcgudonsharp-0.3.4.zip` before using a local package reference.
+`com.logiccuteguy.lcgudonsharp-0.3.5.zip` before using a local package reference.
 GitHub's automatic source archives are developer checkouts, not installable
 Unity packages. The 0.3.2 distribution could lack the compiler payload; update
-affected projects to 0.3.4 and let Unity refresh so the installer can repair it.
+affected projects to 0.3.5 and let Unity refresh so the installer can repair it.
 
 Installable packages contain the compiler under `Payload~/UdonSharp` and optional
 examples under `Samples~/Examples`. Import examples only after setup completes.
 The installer validates compiler features, dependencies, and metadata before
-replacing the compiler. Version 0.3.4 refreshes the collection example's Manual
-sync program asset and the scene's JSON/binary result fields; it does not add
-new language features. Upstream reports seven packaging tests passing, but did
-not retest Unity runtime behavior for this release.
+replacing the compiler. Version 0.3.5 updates network-zone compatibility and
+refreshes serialized examples. Upstream reports seven packaging tests passing,
+a Unity editor test assembly compilation with zero errors, and successful
+package publishing. These checks do not establish multi-client runtime behavior.
 
-Source: [LCGUdonSharp 0.3.4 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.4)
-and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.4/README.md#installation--setup).
+Source: [LCGUdonSharp 0.3.5 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.5)
+and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.5/README.md#installation--setup).
 
 ## Selecting the profile
 
@@ -103,9 +103,16 @@ method.
 - Authority and replay checks validate received frames. Object-owner fields
   still require ownership before mutation.
 - Packet fields are session-only and are not replayed to late joiners.
-- `LCGNetworkZone` restricts recipients and ownership. `[UdonSynced]` under a
-  zone, unsupported Continuous/Udon Graph behaviours, overlapping parent/child
-  zones, and PlayerObject templates sharing a zone hierarchy fail closed.
+- `LCGNetworkZone` scopes LCG packet recipients, ownership, and converted
+  `VRC_ObjectSync` traffic. Continuous behaviours without synced fields are
+  accepted automatically in 0.3.5.
+- Native `[UdonSynced]` fields under a zone fail closed by default. Enable
+  **Allow Native Sync Passthrough** explicitly for compatible third-party
+  hierarchies. Native fields retain VRChat sync semantics and remain
+  instance-wide, not zone-scoped or optimized by the zone. Do not treat this
+  setting as zone-scoped Continuous field synchronization or interpolation.
+- Unsupported networked Udon Graph behaviours, overlapping parent/child zones,
+  and PlayerObject templates sharing a zone hierarchy still fail closed.
 
 The packet wire protocol is experimental and may change between package
 versions. After an upgrade, recompile all UdonSharp programs and rebuild the
