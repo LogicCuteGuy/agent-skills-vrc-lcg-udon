@@ -2,32 +2,33 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.3.6` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.7` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
 other runtime rules in this Skill still apply.
 
-## Installation and upgrade (0.3.6)
+## Installation and upgrade (0.3.7)
 
 Install through VCC/ALCOM or extract the named release asset
-`com.logiccuteguy.lcgudonsharp-0.3.6.zip` before using a local package reference.
+`com.logiccuteguy.lcgudonsharp-0.3.7.zip` before using a local package reference.
 GitHub's automatic source archives are developer checkouts, not installable
 Unity packages. The 0.3.2 distribution could lack the compiler payload; update
-affected projects to 0.3.6 and let Unity refresh so the installer can repair it.
+affected projects to 0.3.7 and let Unity refresh so the installer can repair it.
 
 Installable packages contain the compiler under `Payload~/UdonSharp` and optional
 examples under `Samples~/Examples`. Import examples only after setup completes.
 The installer validates compiler features, dependencies, and metadata before
-replacing the compiler. Version 0.3.6 adds zone recovery, ownership repair,
-and batched object motion. Upstream reports 47 targeted Unity EditMode tests
-and seven packaging tests passing, Udon compilation and Play Mode callback
-checks, fresh installation and repeated setup checks, and user-confirmed
-late-join/owner-departure behavior in VRChat. These results do not establish
-crowded-world bandwidth, FPS, or latency for every project.
+replacing the compiler. Version 0.3.7 adds custom ScriptableObject snapshots
+and a local shop example. Upstream reports 14 Unity editor regression cases,
+including shop purchases in the Udon VM, seven packaging tests, and an editor
+test assembly compiling with zero errors. These are upstream results, not
+runtime validation performed by this skills repository. The 0.3.6 networking
+recovery and motion-batching guidance below remains applicable; it does not
+establish crowded-world bandwidth, FPS, or latency for every project.
 
-Source: [LCGUdonSharp 0.3.6 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.6)
-and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.6/README.md#installation--setup).
+Source: [LCGUdonSharp 0.3.7 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.7)
+and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/README.md#installation--setup).
 
 ## Selecting the profile
 
@@ -59,6 +60,41 @@ present in a source file.
 | `dynamic` | Accepted only when the compiler proves one concrete type | Ambiguous or changing runtime types are rejected |
 | `Span<T>` | Array-backed local spans with the compiler's supported operations | Do not treat `Span<T>` as a general heap or API-boundary type |
 | Collections and JSON | Exact `List<T>` and `Dictionary<TKey,TValue>` syntax lowers to `DataList` / `DataDictionary`; a VRCJson-backed `System.Text.Json` facade supports documented round trips | Collection interfaces, derived collections, custom comparers, nullable collection annotations, collection LINQ, and Inspector-serialized collections are rejected |
+
+## Custom ScriptableObject data (0.3.7)
+
+Ordinary custom Unity `ScriptableObject` classes need no LCG base class or
+attribute. Assign their assets to behaviour fields in the Inspector. The data
+class may live in an ordinary C# assembly and needs no Udon program asset;
+the consuming UdonSharp behaviour still needs its paired program asset.
+
+During proxy serialization/build, each behaviour receives an `object[]` data
+snapshot. Read public instance fields and private `[SerializeField]` fields,
+including inherited fields. Supported values include primitives, strings, enums,
+the documented Unity value types, `VRCUrl`, and Udon-supported Unity references.
+One-dimensional field arrays and behaviour fields containing arrays of data
+assets are supported. Native SDK types such as `UdonProduct` keep their existing
+Udon behavior; this lowering is for custom data assets.
+
+Every array field read returns a fresh shallow defensive copy, preserving null.
+Cache the array in a local before loops to avoid repeated allocation. Referenced
+Unity objects retain their normal mutable APIs. Snapshots do not promise shared
+reference identity even when fields reference the same source asset. Rebuild
+after changing asset data or its field schema; edits during play do not update
+snapshots. Heap-to-proxy reads preserve Inspector asset assignments and never
+write snapshot values back into the source asset.
+
+Reject data-field writes, properties, instance/static methods, Unity object APIs
+on custom data assets, `new`, `ScriptableObject.CreateInstance`, casts to other
+asset/object types, and polymorphic references. Nested data assets, arbitrary
+custom classes, collections, multidimensional/jagged data arrays,
+`[SerializeReference]`, and `[UdonSynced]` data assets/arrays are unsupported.
+Copy values into ordinary gameplay state to mutate or synchronize them.
+
+The optional `ScriptableObjectShopExample.prefab` demonstrates local purchases,
+not multiplayer synchronization. See the pinned
+[data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/ScriptableObjects/README.md)
+for supported field types, setup, and the defensive-copy example.
 
 ## Collections, JSON, and synchronization
 
@@ -156,8 +192,8 @@ The optional samples include `NetworkExamples.prefab` (native/LCG lamps and a
 moving cube) and `HighBandwidthExamples.prefab` (native payload and LCG motion
 load generators). Both load generators start stopped. Keep native examples
 outside the zone unless intentionally using native-sync passthrough. See the
-[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.6/Example/Networking/README.md)
-and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.6/Example/Networking/README.th.md).
+[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.md)
+and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.th.md).
 
 The packet wire protocol remains experimental. Recompile UdonSharp programs
 and rebuild worlds after upgrading to 0.3.6: older builds cannot decode the
@@ -173,5 +209,6 @@ Do not relax these merely because the LCG profile is active:
 - `yield return`, `StartCoroutine`, runtime delegates, and `AddListener` remain
   unavailable unless a future package version explicitly adds them.
 - Native Udon ownership and `[UdonSynced]` serialization rules are unchanged.
-- Every UdonSharp `.cs` still needs its paired program `.asset`.
+- Every UdonSharp behaviour `.cs` still needs its paired program `.asset`;
+  ordinary ScriptableObject data classes do not.
 - The package currently requires exactly VRChat Worlds SDK `3.10.5`.

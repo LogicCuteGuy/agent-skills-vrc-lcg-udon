@@ -10,7 +10,11 @@ project installs `com.logiccuteguy.lcgudonsharp`, read
 `async`/`await`, synchronous exceptions, LINQ closures, closed generics,
 `dynamic`, array-backed `Span<T>`, and exact compiler-lowered `List<T>` /
 `Dictionary<TKey,TValue>` collections with documented JSON and Manual-sync
-support. Unlisted stock restrictions still apply.
+support, plus read-only custom `ScriptableObject` data snapshots in 0.3.7.
+Assign assets in the Inspector; array field reads return copies. Do not write,
+create, cast, nest, or sync custom data assets; rebuild after asset/schema edits.
+Only the consuming behaviour needs a program asset. Unlisted stock restrictions
+still apply.
 
 ## Features Blocked in Udon Runtime
 

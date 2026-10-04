@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.6-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.6" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.7-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.7" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="License" />
 </p>
@@ -29,11 +29,13 @@
   <a href="#disclaimer">Disclaimer</a>
 </p>
 
-> Install LCGUdonSharp 0.3.6 through VCC/ALCOM or the named release ZIP. GitHub’s automatic source archives are not installable Unity packages. Import optional examples only after compiler setup completes. [LCGUdonSharp 0.3.6](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.6)
+> Install LCGUdonSharp 0.3.7 through VCC/ALCOM or the named release ZIP. GitHub’s automatic source archives are not installable Unity packages. Import optional examples only after compiler setup completes. [LCGUdonSharp 0.3.7](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.7)
 
 In 0.3.6, Continuous behaviours without synced fields are accepted inside `LCGNetworkZone`. **Allow Native Sync Passthrough** is opt-in; native synced fields remain instance-wide, not zone-scoped.
 
-LCGUdonSharp 0.3.6 recovers current zone fields and object snapshots on entry and after `OnPlayerRestored`, repairs ownership after owner departure, and batches object motion with congestion backoff and remote interpolation. Rebuild worlds after upgrading because older builds cannot decode the motion batch format. The upstream package includes native/LCG networking starter prefabs, load examples, and Thai setup guidance; see the [networking examples](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.6/Example/Networking/README.md).
+LCGUdonSharp 0.3.6 recovers current zone fields and object snapshots on entry and after `OnPlayerRestored`, repairs ownership after owner departure, and batches object motion with congestion backoff and remote interpolation. Rebuild worlds after upgrading because older builds cannot decode the motion batch format. The upstream package includes native/LCG networking starter prefabs, load examples, and Thai setup guidance; see the [networking examples](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.md).
+
+LCGUdonSharp 0.3.7 adds read-only custom `ScriptableObject` data snapshots: assign assets in the Inspector and read supported serialized fields, inherited fields, or asset arrays. Array field reads return defensive copies. Writes, properties, runtime creation, casts, nested assets, and synced snapshots are unsupported; copy values into gameplay state instead. Rebuild after changing asset data or schema. See the optional [shop example and data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/ScriptableObjects/README.md).
 
 ---
 
@@ -48,7 +50,7 @@ The restrictions in this repository are **profile-specific**, not universal bans
 | Compiler profile | Runtime guidance |
 |------------------|------------------|
 | **Stock UdonSharp** | `List<T>`, `async/await`, `try/catch`, runtime LINQ/lambdas, interfaces, and unsupported generics are blocked. Use the stock alternatives documented by this repository. |
-| **LCGUdonSharp 0.3.6** | When the live Unity project installs `com.logiccuteguy.lcgudonsharp`, restricted interfaces, async lowering, synchronous exceptions, `Where`/`Select` LINQ closures, closed generics, proven `dynamic`, array-backed `Span<T>`, exact lowered `List<T>` / `Dictionary<TKey,TValue>` collections with JSON support, and experimental `[LCGPacket]` are available within their documented boundaries. |
+| **LCGUdonSharp 0.3.7** | When the live Unity project installs `com.logiccuteguy.lcgudonsharp`, restricted interfaces, async lowering, synchronous exceptions, `Where`/`Select` LINQ closures, closed generics, proven `dynamic`, array-backed `Span<T>`, exact lowered `List<T>` / `Dictionary<TKey,TValue>` collections with JSON support, and experimental `[LCGPacket]` are available within their documented boundaries. |
 
 LCGUdonSharp is not unrestricted .NET: only the exact compiler-lowered `List<T>` and `Dictionary<TKey,TValue>` collection shapes are supported, other generic heap collections remain blocked, and only the async, exception, LINQ, collection/JSON, and language shapes listed in [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) are available. Agents and validation hooks must inspect the live Unity project before applying the stock `NEVER` list; when the project cannot be inspected, they deliberately default to Stock UdonSharp.
 
