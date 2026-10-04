@@ -18,7 +18,7 @@ description: >
 license: MIT
 metadata:
     author: niaka3dayo
-    version: "4.2.4"
+    version: "4.2.5"
     tags: vrchat, world-sdk, scene-setup, optimization, components, upload, sdk-validation, build-panel
 ---
 

@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.7-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.7" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.8-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.8" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="授權條款" />
 </p>
@@ -29,13 +29,13 @@
   <a href="#disclaimer">免責聲明</a>
 </p>
 
-> 請透過 VCC/ALCOM 或發行版中具名的 ZIP 套件安裝 LCGUdonSharp 0.3.7。GitHub 自動產生的原始碼封存檔不是可安裝的 Unity 套件。請在編譯器安裝完成後再匯入選用範例。 [LCGUdonSharp 0.3.7](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.7)
+> 請透過 VCC/ALCOM 或發行版中具名的 ZIP 套件安裝 LCGUdonSharp 0.3.8。GitHub 自動產生的原始碼封存檔不是可安裝的 Unity 套件。請在編譯器安裝完成後再匯入選用範例。 [LCGUdonSharp 0.3.8](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.8)
 
 0.3.6 允許不含同步欄位的 Continuous 行為位於 `LCGNetworkZone` 內。**Allow Native Sync Passthrough** 需手動啟用；原生同步欄位仍在整個實例中同步，不受區域範圍限制。
 
-LCGUdonSharp 0.3.6 會在進入區域及 `OnPlayerRestored` 後恢復目前欄位與物件快照，並在擁有者離開後修復所有權。物件移動採用批次傳送，支援壅塞退避與遠端插值。舊建置無法解碼新的移動批次格式，因此更新後必須重新建置世界。原生/LCG 網路入門預製件、負載範例與泰語設定指南請參閱 [網路範例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.md)。
+LCGUdonSharp 0.3.6 會在進入區域及 `OnPlayerRestored` 後恢復目前欄位與物件快照，並在擁有者離開後修復所有權。物件移動採用批次傳送，支援壅塞退避與遠端插值。舊建置無法解碼新的移動批次格式，因此更新後必須重新建置世界。原生/LCG 網路入門預製件、負載範例與泰語設定指南請參閱 [網路範例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.md)。
 
-LCGUdonSharp 0.3.7 支援將自訂 `ScriptableObject` 資源作為唯讀資料快照。在 Inspector 中指定資源後，可讀取支援的序列化欄位、繼承欄位及資源陣列；讀取陣列欄位會回傳副本。不支援欄位寫入、屬性、執行時建立、型別轉換、巢狀資源或同步快照。需要修改或同步時，請將值複製到一般遊戲狀態。變更資源資料或欄位結構後須重新建置。請參閱選用的 [商店範例與資料指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/ScriptableObjects/README.md)。
+LCGUdonSharp 0.3.8 的唯讀自訂 `ScriptableObject` 快照支援巢狀參照/陣列，以及指定給自訂基底型別的衍生資源。支援 `is`、宣告模式、`as` 與具型別檢查的明確轉型；不相容的 `as` 回傳 null，無效明確轉型觸發 `InvalidCastException`。陣列欄位仍回傳副本。仍不支援寫入、屬性/方法、執行時建立、轉型為 `object`/原生資源、陣列共變性或同步快照。循環參照與超過 128 個資源的巢狀結構會造成烘焙錯誤。執行時型別標籤改變了快照配置，升級後須重新編譯所有 Udon 程式並重新烘焙場景/預製件資料。請參閱 [商店/裝備範例與資料指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/ScriptableObjects/README.md)。
 
 ---
 
@@ -50,7 +50,7 @@ LCGUdonSharp 0.3.7 支援將自訂 `ScriptableObject` 資源作為唯讀資料�
 | 編譯器設定檔 | Runtime 指引 |
 |--------------|--------------|
 | **Stock UdonSharp** | 不支援 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、介面及未支援的泛型。請使用本專案記載的 Stock 替代方案。 |
-| **LCGUdonSharp 0.3.7** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
+| **LCGUdonSharp 0.3.8** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
 
 LCGUdonSharp 並非不受限制的 .NET：僅支援編譯器精確 lowering 的 `List<T>` 與 `Dictionary<TKey,TValue>` 形式，其他泛型 heap collection 仍不可使用，而且僅支援 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 列出的 async、例外、LINQ、collection/JSON 與語言形式。代理與驗證掛鉤必須先檢查目前 Unity 專案，才能套用 Stock `NEVER` 清單；若無法檢查專案，則會刻意預設為 Stock UdonSharp。
 

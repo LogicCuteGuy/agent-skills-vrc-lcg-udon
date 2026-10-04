@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.7-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.7" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.8-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.8" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="License" />
 </p>
@@ -29,13 +29,13 @@
   <a href="#disclaimer">免責事項</a>
 </p>
 
-> LCGUdonSharp 0.3.7 は VCC/ALCOM または名前付きのリリース ZIP から導入してください。GitHub の自動生成ソースアーカイブは Unity にインストールできるパッケージではありません。サンプルはコンパイラのセットアップ完了後にインポートしてください。 [LCGUdonSharp 0.3.7](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.7)
+> LCGUdonSharp 0.3.8 は VCC/ALCOM または名前付きのリリース ZIP から導入してください。GitHub の自動生成ソースアーカイブは Unity にインストールできるパッケージではありません。サンプルはコンパイラのセットアップ完了後にインポートしてください。 [LCGUdonSharp 0.3.8](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.8)
 
 0.3.6 では、同期フィールドのない Continuous ビヘイビアを `LCGNetworkZone` 内で使用できます。**Allow Native Sync Passthrough** は明示的に有効化する設定です。ネイティブ同期フィールドの対象はゾーン内ではなく、インスタンス全体のままです。
 
-LCGUdonSharp 0.3.6 はゾーンへの入場時と `OnPlayerRestored` 後に現在のフィールドとオブジェクトのスナップショットを取得し、所有者の退出後に所有権を修復します。オブジェクト移動はまとめて送信され、混雑時の待機とリモート補間に対応します。旧ビルドは新しい移動形式を解釈できないため、更新後にワールドを再ビルドしてください。ネイティブ/LCG 通信のスタータープレハブ、負荷サンプル、タイ語のセットアップガイドは [通信サンプル](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.md) を参照してください。
+LCGUdonSharp 0.3.6 はゾーンへの入場時と `OnPlayerRestored` 後に現在のフィールドとオブジェクトのスナップショットを取得し、所有者の退出後に所有権を修復します。オブジェクト移動はまとめて送信され、混雑時の待機とリモート補間に対応します。旧ビルドは新しい移動形式を解釈できないため、更新後にワールドを再ビルドしてください。ネイティブ/LCG 通信のスタータープレハブ、負荷サンプル、タイ語のセットアップガイドは [通信サンプル](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.md) を参照してください。
 
-LCGUdonSharp 0.3.7 は独自の `ScriptableObject` アセットを読み取り専用データスナップショットとして扱います。Inspector で割り当て、対応するシリアライズ済みフィールド、継承フィールド、アセット配列を読み取れます。配列フィールドの読み取りはコピーを返します。書き込み、プロパティ、実行時生成、キャスト、入れ子のアセット、スナップショットの同期は非対応です。変更や同期が必要な値は通常のゲーム状態へコピーし、アセットの値やスキーマを変更したら再ビルドしてください。任意サンプルの [ショップ例とデータガイド](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/ScriptableObjects/README.md) を参照してください。
+LCGUdonSharp 0.3.8 は読み取り専用の独自 `ScriptableObject` スナップショットで、入れ子の参照・配列と基底型に割り当てた派生アセットをサポートします。`is`、宣言パターン、`as`、型チェック付き明示的キャストが使えます。不適合な `as` は null、明示的キャストは `InvalidCastException` になります。配列フィールドはコピーを返します。書き込み、プロパティやメソッド、実行時生成、`object`／ネイティブアセットへのキャスト、配列の共変性、スナップショットの同期は非対応です。循環参照と 128 アセットを超える入れ子はベイクエラーになります。型タグによるレイアウト変更のため、更新後は全 Udon プログラムを再ビルドし、シーン／プレハブのデータを再ベイクしてください。[ショップ・装備例とデータガイド](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/ScriptableObjects/README.md) を参照してください。
 
 ---
 
@@ -50,7 +50,7 @@ LCGUdonSharp 0.3.7 は独自の `ScriptableObject` アセットを読み取り�
 | コンパイラプロファイル | ランタイム向けガイダンス |
 |------------------------|--------------------------|
 | **Stock UdonSharp** | `List<T>`、`async/await`、`try/catch`、ランタイムのLINQ/ラムダ、インターフェース、未対応のジェネリックは使用できません。このリポジトリに記載されたStock向け代替手段を使用してください。 |
-| **LCGUdonSharp 0.3.7** | 対象のUnityプロジェクトに `com.logiccuteguy.lcgudonsharp` が導入されている場合、制限付きインターフェース、async lowering、同期例外、`Where`/`Select` LINQクロージャ、クローズドジェネリック、型を証明できる `dynamic`、配列ベースの `Span<T>`、JSON対応の正確にloweringされる `List<T>` / `Dictionary<TKey,TValue>`、実験的な `[LCGPacket]` を文書化された範囲内で使用できます。 |
+| **LCGUdonSharp 0.3.8** | 対象のUnityプロジェクトに `com.logiccuteguy.lcgudonsharp` が導入されている場合、制限付きインターフェース、async lowering、同期例外、`Where`/`Select` LINQクロージャ、クローズドジェネリック、型を証明できる `dynamic`、配列ベースの `Span<T>`、JSON対応の正確にloweringされる `List<T>` / `Dictionary<TKey,TValue>`、実験的な `[LCGPacket]` を文書化された範囲内で使用できます。 |
 
 LCGUdonSharpは無制限の.NETではありません。コンパイラがloweringする正確な `List<T>` と `Dictionary<TKey,TValue>` の形だけがサポートされ、その他のジェネリックヒープコレクションは引き続き使用できません。[`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) に記載されたasync、例外、LINQ、コレクション/JSON、言語構文のみがサポート対象です。エージェントと検証フックはStockの `NEVER` リストを適用する前に対象のUnityプロジェクトを確認し、確認できない場合は意図的にStock UdonSharpを既定値にします。
 

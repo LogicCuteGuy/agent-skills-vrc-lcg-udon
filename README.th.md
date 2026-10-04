@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.7-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.7" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.8-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.8" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="สกิลเอเจนต์ AI" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="สัญญาอนุญาต" />
 </p>
@@ -29,13 +29,13 @@
   <a href="#disclaimer">ข้อจำกัดความรับผิดชอบ</a>
 </p>
 
-> ติดตั้ง LCGUdonSharp 0.3.7 ผ่าน VCC/ALCOM หรือไฟล์ ZIP แพ็กเกจที่แนบในรีลีส ไฟล์ซอร์สที่ GitHub สร้างอัตโนมัติไม่ใช่แพ็กเกจสำหรับติดตั้งใน Unity ให้นำเข้าตัวอย่างเสริมหลังติดตั้งคอมไพเลอร์เสร็จแล้ว [LCGUdonSharp 0.3.7](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.7)
+> ติดตั้ง LCGUdonSharp 0.3.8 ผ่าน VCC/ALCOM หรือไฟล์ ZIP แพ็กเกจที่แนบในรีลีส ไฟล์ซอร์สที่ GitHub สร้างอัตโนมัติไม่ใช่แพ็กเกจสำหรับติดตั้งใน Unity ให้นำเข้าตัวอย่างเสริมหลังติดตั้งคอมไพเลอร์เสร็จแล้ว [LCGUdonSharp 0.3.8](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.8)
 
 ใน 0.3.6 ใช้ behaviour แบบ Continuous ที่ไม่มีฟิลด์ซิงก์ภายใน `LCGNetworkZone` ได้ ส่วน **Allow Native Sync Passthrough** ต้องเปิดเอง และฟิลด์ซิงก์แบบ native ยังคงส่งทั่วทั้ง instance ไม่ได้จำกัดเฉพาะโซน
 
-LCGUdonSharp 0.3.6 ขอ snapshot ของฟิลด์และสถานะวัตถุปัจจุบันเมื่อเข้าโซนและหลัง `OnPlayerRestored` ซ่อม ownership เมื่อ owner ออก และรวมการเคลื่อนที่ของวัตถุเป็น batch พร้อมพักเมื่อเครือข่ายแออัดและ interpolation ฝั่งรับ ต้อง Build world ใหม่หลังอัปเดต เพราะบิลด์เก่าถอดรหัส motion batch รูปแบบใหม่ไม่ได้ แพ็กเกจมี prefab ตัวอย่าง native/LCG, ตัวอย่างสร้างโหลด และ [คู่มือตั้งค่าภาษาไทย](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/Networking/README.th.md)
+LCGUdonSharp 0.3.6 ขอ snapshot ของฟิลด์และสถานะวัตถุปัจจุบันเมื่อเข้าโซนและหลัง `OnPlayerRestored` ซ่อม ownership เมื่อ owner ออก และรวมการเคลื่อนที่ของวัตถุเป็น batch พร้อมพักเมื่อเครือข่ายแออัดและ interpolation ฝั่งรับ ต้อง Build world ใหม่หลังอัปเดต เพราะบิลด์เก่าถอดรหัส motion batch รูปแบบใหม่ไม่ได้ แพ็กเกจมี prefab ตัวอย่าง native/LCG, ตัวอย่างสร้างโหลด และ [คู่มือตั้งค่าภาษาไทย](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.th.md)
 
-LCGUdonSharp 0.3.7 รองรับ asset `ScriptableObject` ที่สร้างเองเป็น snapshot ข้อมูลแบบอ่านอย่างเดียว กำหนด asset ใน Inspector แล้วอ่านฟิลด์ serialized ที่รองรับ ฟิลด์ที่สืบทอด และ array ของ asset ได้ การอ่านฟิลด์ array จะคืนสำเนา ไม่รองรับการเขียนฟิลด์, property, การสร้างขณะ runtime, cast, asset ซ้อนกัน หรือการซิงก์ snapshot ให้คัดลอกค่าไปยังสถานะเกมปกติหากต้องแก้ไขหรือซิงก์ และ Build ใหม่เมื่อเปลี่ยนข้อมูลหรือ schema ของ asset ดู [ตัวอย่างร้านค้าและคู่มือข้อมูล](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.7/Example/ScriptableObjects/README.md) ใน sample เสริม
+LCGUdonSharp 0.3.8 รองรับ snapshot `ScriptableObject` แบบอ่านอย่างเดียวที่มี asset ซ้อนกันทั้งฟิลด์และ array รวมถึง asset ชนิดลูกที่กำหนดให้ชนิดฐาน ใช้ `is`, declaration pattern, `as` และ explicit cast แบบตรวจชนิดได้ โดย `as` ที่ชนิดไม่ตรงคืน null และ explicit cast ที่ไม่ถูกต้องเกิด `InvalidCastException` ฟิลด์ array ยังคงคืนสำเนา ไม่รองรับการเขียน, property/method, การสร้างขณะ runtime, cast ไป `object`/native asset, array covariance หรือซิงก์ snapshot กราฟวนซ้ำและความลึกเกิน 128 asset จะเกิด bake error ต้องคอมไพล์ Udon ทั้งหมดและ bake ข้อมูล scene/prefab ใหม่หลังอัปเดต เพราะ runtime type tag เปลี่ยน layout ของ snapshot ดู [ตัวอย่างร้านค้า/อุปกรณ์และคู่มือข้อมูล](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/ScriptableObjects/README.md)
 
 ---
 
@@ -50,7 +50,7 @@ LCGUdonSharp 0.3.7 รองรับ asset `ScriptableObject` ที่สร�
 | โปรไฟล์คอมไพเลอร์ | แนวทางสำหรับโค้ด runtime |
 |--------------------|---------------------------|
 | **Stock UdonSharp** | ไม่รองรับ `List<T>`, `async/await`, `try/catch`, LINQ/lambda ตอน runtime, interface และ generic ที่อยู่นอกชุดรองรับ ให้ใช้ทางเลือกของ Stock ที่เอกสารนี้ระบุ |
-| **LCGUdonSharp 0.3.7** | เมื่อโปรเจกต์ Unity ที่กำลังใช้งานติดตั้ง `com.logiccuteguy.lcgudonsharp` จะใช้ interface แบบจำกัด, async lowering, exception แบบ synchronous, LINQ closure ของ `Where`/`Select`, closed generic, `dynamic` ที่พิสูจน์ชนิดได้, `Span<T>` ที่มี array รองรับ, `List<T>` / `Dictionary<TKey,TValue>` รูปแบบตรงที่ lowering พร้อม JSON และ `[LCGPacket]` แบบทดลองได้ภายในขอบเขตที่ระบุไว้ |
+| **LCGUdonSharp 0.3.8** | เมื่อโปรเจกต์ Unity ที่กำลังใช้งานติดตั้ง `com.logiccuteguy.lcgudonsharp` จะใช้ interface แบบจำกัด, async lowering, exception แบบ synchronous, LINQ closure ของ `Where`/`Select`, closed generic, `dynamic` ที่พิสูจน์ชนิดได้, `Span<T>` ที่มี array รองรับ, `List<T>` / `Dictionary<TKey,TValue>` รูปแบบตรงที่ lowering พร้อม JSON และ `[LCGPacket]` แบบทดลองได้ภายในขอบเขตที่ระบุไว้ |
 
 LCGUdonSharp ไม่ใช่ .NET แบบไร้ข้อจำกัด: รองรับเฉพาะ `List<T>` และ `Dictionary<TKey,TValue>` รูปแบบตรงที่คอมไพเลอร์ lowering ส่วน generic heap collection อื่นยังใช้ไม่ได้ และรองรับเฉพาะรูปแบบ async, exception, LINQ, collection/JSON และภาษาที่ระบุใน [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) เท่านั้น เอเจนต์และ validation hook ต้องตรวจโปรเจกต์ Unity ที่กำลังใช้งานก่อนนำรายการ `NEVER` ของ Stock มาใช้ หากตรวจโปรเจกต์ไม่ได้ ระบบจะเลือก Stock UdonSharp โดยตั้งใจ
 

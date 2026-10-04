@@ -10,9 +10,14 @@ project installs `com.logiccuteguy.lcgudonsharp`, read
 `async`/`await`, synchronous exceptions, LINQ closures, closed generics,
 `dynamic`, array-backed `Span<T>`, and exact compiler-lowered `List<T>` /
 `Dictionary<TKey,TValue>` collections with documented JSON and Manual-sync
-support, plus read-only custom `ScriptableObject` data snapshots in 0.3.7.
-Assign assets in the Inspector; array field reads return copies. Do not write,
-create, cast, nest, or sync custom data assets; rebuild after asset/schema edits.
+support, plus read-only custom `ScriptableObject` data snapshots in 0.3.8.
+Assign assets in the Inspector; array field reads return copies. Nested assets,
+custom base/derived references, `is`, declaration patterns, `as`, and checked
+explicit casts are supported. Invalid `as` returns null; invalid explicit casts
+raise `InvalidCastException`. Do not write, create, or sync custom data assets;
+object/native casts and array covariance remain unsupported. Cycles and nesting
+beyond 128 assets fail baking. Rebuild all Udon programs and rebake scene/prefab
+data after upgrading: 0.3.8 changes the snapshot layout.
 Only the consuming behaviour needs a program asset. Unlisted stock restrictions
 still apply.
 
