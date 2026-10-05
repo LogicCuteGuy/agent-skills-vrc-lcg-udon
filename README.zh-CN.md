@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.9-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.9" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.10-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.10" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="AI Agent 技能" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="许可证" />
 </p>
@@ -29,15 +29,15 @@
   <a href="#disclaimer">免责声明</a>
 </p>
 
-> 请通过 VCC/ALCOM 或发行版中命名的 ZIP 包安装 LCGUdonSharp 0.3.9。GitHub 自动生成的源码归档不是可安装的 Unity 包。请在编译器安装完成后再导入可选示例。 [LCGUdonSharp 0.3.9](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.9)
+> 请通过 VCC/ALCOM 安装 LCGUdonSharp 0.3.10，它会在 Unity 编译前安装 SBP compatibility 1.21.26。手动安装时先关闭 Unity，再解压**两个 ZIP**：`com.logiccuteguy.lcgudonsharp-0.3.10.zip` → `Packages/com.logiccuteguy.lcgudonsharp`，`com.unity.scriptablebuildpipeline-1.21.26.zip` → `Packages/com.unity.scriptablebuildpipeline`。保留嵌入式 SBP，避免重新生成 `Library` 时丢失修复。自动源码归档不是安装包；编译器设置完成后再导入示例。[LCGUdonSharp 0.3.10](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.10) · [SBP compatibility 1.21.26](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/sbp-compatibility-1.21.26)
 
 0.3.6 允许不含同步字段的 Continuous 行为位于 `LCGNetworkZone` 内。**Allow Native Sync Passthrough** 需手动启用；原生同步字段仍在整个实例中同步，不受区域范围限制。
 
-LCGUdonSharp 0.3.6 会在进入区域及 `OnPlayerRestored` 后恢复当前字段和对象快照，并在所有者离开后修复所有权。对象运动采用批量发送，支持拥塞退避和远端插值。旧构建无法解码新的运动批次格式，因此更新后必须重新构建世界。原生/LCG 网络入门预制件、负载示例和泰语设置指南见 [网络示例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.md)。
+LCGUdonSharp 0.3.6 会在进入区域及 `OnPlayerRestored` 后恢复当前字段和对象快照，并在所有者离开后修复所有权。对象运动采用批量发送，支持拥塞退避和远端插值。旧构建无法解码新的运动批次格式，因此更新后必须重新构建世界。原生/LCG 网络入门预制件、负载示例和泰语设置指南见 [网络示例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Networking/README.md)。
 
-LCGUdonSharp 0.3.8 的只读自定义 `ScriptableObject` 快照支持嵌套引用/数组，以及分配给自定义基类类型的派生资源。支持 `is`、声明模式、`as` 和带类型检查的显式转换；不兼容的 `as` 返回 null，无效显式转换触发 `InvalidCastException`。数组字段仍返回副本。仍不支持写入、属性/方法、运行时创建、转换为 `object`/原生资源、数组协变或同步快照。循环引用及超过 128 个资源的嵌套会导致烘焙错误。运行时类型标签改变了快照布局，升级后须重新编译所有 Udon 程序并重新烘焙场景/预制件数据。参阅 [商店/装备示例与数据指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/ScriptableObjects/README.md)。
+LCGUdonSharp 0.3.8 的只读自定义 `ScriptableObject` 快照支持嵌套引用/数组，以及分配给自定义基类类型的派生资源。支持 `is`、声明模式、`as` 和带类型检查的显式转换；不兼容的 `as` 返回 null，无效显式转换触发 `InvalidCastException`。数组字段仍返回副本。仍不支持写入、属性/方法、运行时创建、转换为 `object`/原生资源、数组协变或同步快照。循环引用及超过 128 个资源的嵌套会导致烘焙错误。运行时类型标签改变了快照布局，升级后须重新编译所有 Udon 程序并重新烘焙场景/预制件数据。参阅 [商店/装备示例与数据指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/ScriptableObjects/README.md)。
 
-LCGUdonSharp 0.3.9 将 Unity Localization String/Asset Tables 烘焙为 Udon，支持文本、精灵、纹理、音频及本地预制件变体，无需运行时加载 Addressables。语言选择仅在本地生效且不跨访问保存，支持区域/默认语言回退、下拉菜单和语言变化回调。Smart Strings 仅支持已验证的标量占位符、固定区域性数字格式、带回退的 choose，以及英语或泰语/日语/中文复数形式，并非任意格式器。需要 Unity Localization 1.4.5 和 Scriptable Build Pipeline 1.21.25。不支持的配置会停止烘焙；请提供覆盖所用语言的字体。参阅 [设置与示例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/UnityLocalization.md)。旧版 JSON 编辑工具仍可使用。
+LCGUdonSharp 0.3.9 将 Unity Localization String/Asset Tables 烘焙为 Udon，支持文本、精灵、纹理、音频及本地预制件变体，无需运行时加载 Addressables。语言选择仅在本地生效且不跨访问保存，支持区域/默认语言回退、下拉菜单和语言变化回调。Smart Strings 仅支持已验证的标量占位符、固定区域性数字格式、带回退的 choose，以及英语或泰语/日语/中文复数形式，并非任意格式器。需要 Unity Localization 1.4.5 和 Scriptable Build Pipeline 1.21.26。不支持的配置会停止烘焙；请提供覆盖所用语言的字体。参阅 [设置与示例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Localization/UnityLocalization.md)。旧版 JSON 编辑工具仍可使用。
 
 ---
 
@@ -52,7 +52,7 @@ LCGUdonSharp 0.3.9 将 Unity Localization String/Asset Tables 烘焙为 Udon，�
 | 编译器配置 | Runtime 指引 |
 |------------|--------------|
 | **Stock UdonSharp** | 不支持 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、接口及未支持的泛型。请使用本仓库记录的 Stock 替代方案。 |
-| **LCGUdonSharp 0.3.9** | 当当前 Unity 项目安装了 `com.logiccuteguy.lcgudonsharp` 时，可以在文档规定的范围内使用受限接口、async lowering、同步异常、`Where`/`Select` LINQ closure、封闭泛型、可证明类型的 `dynamic`、数组支持的 `Span<T>`、带 JSON 支持的精确 lowering `List<T>` / `Dictionary<TKey,TValue>` 以及实验性 `[LCGPacket]`。 |
+| **LCGUdonSharp 0.3.10** | 当当前 Unity 项目安装了 `com.logiccuteguy.lcgudonsharp` 时，可以在文档规定的范围内使用受限接口、async lowering、同步异常、`Where`/`Select` LINQ closure、封闭泛型、可证明类型的 `dynamic`、数组支持的 `Span<T>`、带 JSON 支持的精确 lowering `List<T>` / `Dictionary<TKey,TValue>` 以及实验性 `[LCGPacket]`。 |
 
 LCGUdonSharp 并不是不受限制的 .NET：仅支持编译器精确 lowering 的 `List<T>` 和 `Dictionary<TKey,TValue>` 形式，其他泛型 heap collection 仍不可用，并且只支持 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 中列出的 async、异常、LINQ、collection/JSON 和语言形式。代理与验证钩子必须先检查当前 Unity 项目，再应用 Stock `NEVER` 清单；如果无法检查项目，则会有意默认使用 Stock UdonSharp。
 

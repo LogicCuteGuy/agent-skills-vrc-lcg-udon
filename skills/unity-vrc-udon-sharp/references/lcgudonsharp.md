@@ -2,33 +2,48 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.3.9` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.10` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
 other runtime rules in this Skill still apply.
 
-## Installation and upgrade (0.3.9)
+## Installation and upgrade (0.3.10)
 
-Install through VCC/ALCOM or extract the named release asset
-`com.logiccuteguy.lcgudonsharp-0.3.9.zip` before using a local package reference.
+Install 0.3.10 through VCC/ALCOM. VPM pins SBP compatibility `1.21.26`,
+based on Unity SBP `1.21.25`, and installs it before Unity compiles scripts.
+This disables editor DLL auto-references to avoid the VRChat SDK global
+`ExtensionMethods` collision. Upstream source, GUIDs, and the Unity Companion
+License are preserved; Unity Localization remains available.
+
+For manual installation, close Unity and extract both named release ZIPs:
+
+- `com.logiccuteguy.lcgudonsharp-0.3.10.zip` into
+  `Packages/com.logiccuteguy.lcgudonsharp`.
+- `com.unity.scriptablebuildpipeline-1.21.26.zip` from the separate
+  [SBP compatibility release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/sbp-compatibility-1.21.26)
+  into `Packages/com.unity.scriptablebuildpipeline`.
+
+Keep SBP embedded in the project, including when using a local LCG package
+reference, so regenerating `Library` does not remove the compatibility fix.
+Do not rely on an editor repair that runs only after a failed compilation.
+The package's UPM dependency still names base SBP `1.21.25`; its VPM dependency
+pins the embedded compatibility build `1.21.26`. These are not interchangeable
+installation instructions.
+
 GitHub's automatic source archives are developer checkouts, not installable
-Unity packages. The 0.3.2 distribution could lack the compiler payload; update
-affected projects to 0.3.9 and let Unity refresh so the installer can repair it.
+Unity packages. Installable packages contain the compiler under
+`Payload~/UdonSharp` and optional examples under `Samples~/Examples`.
+Import examples only after compiler setup completes. The 0.3.2 distribution
+could lack the compiler payload; update affected projects to 0.3.10.
 
-Installable packages contain the compiler under `Payload~/UdonSharp` and optional
-examples under `Samples~/Examples`. Import examples only after setup completes.
-The installer validates compiler features, dependencies, and metadata before
-replacing the compiler. Version 0.3.9 adds baked Unity Localization tables,
-validated Smart Strings, localized assets, and build/thread compatibility fixes.
-Upstream reports seven packaging tests, a successful C# build, 24 localization
-fixture cases executed in Unity, and Play Mode language/asset/callback checks
-after startup. These are upstream results, not runtime validation performed by
-this skills repository. Earlier networking and data-snapshot guidance below
-remains applicable; these checks do not prove every project's runtime behavior.
+Upstream reports eight release packaging tests passing, including dependency
+metadata and upstream source preservation. These are upstream packaging results,
+not Unity runtime validation performed by this skills repository. Existing
+localization, data-snapshot, and networking boundaries below still apply.
 
-Source: [LCGUdonSharp 0.3.9 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.9)
-and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/README.md#installation--setup).
+Source: [LCGUdonSharp 0.3.10 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.10)
+and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/README.md#installation--setup).
 
 ## Selecting the profile
 
@@ -115,14 +130,15 @@ The optional `ScriptableObjectShopExample.prefab` and
 `ScriptableObjectEquipmentExample.prefab` demonstrate local purchases, not
 multiplayer synchronization. The equipment example uses weapon/spell definitions,
 nested economy assets, and a base-typed catalog. See the pinned
-[data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/ScriptableObjects/README.md)
+[data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/ScriptableObjects/README.md)
 for setup, supported types, and defensive-copy/cast examples.
 
 ## Unity Localization bridge (0.3.9)
 
-Package dependencies are Unity Localization `1.4.5` and Scriptable Build Pipeline
-`1.21.25`. Author Locales, String Table Collections, and Asset Table Collections
-with Unity Localization. LCGUdonSharp bakes values and bindings into the temporary
+Unity Localization remains at `1.4.5`. Install embedded SBP compatibility
+`1.21.26` (based on `1.21.25`) as described in the installation section.
+Author Locales, String Table Collections, and Asset Table Collections with Unity
+Localization. LCGUdonSharp bakes values and bindings into the temporary
 Play Mode/build scene; native authoring components remain editable. The world
 does not load Addressables at runtime. Re-enter Play Mode or rebuild to apply
 table edits. One manager per collection per scene is supported; text and manager
@@ -163,8 +179,8 @@ Provide fonts with glyph coverage for every displayed language; localization
 does not supply complete fonts automatically. Legacy JSON authoring remains
 available, but Unity tables are the primary workflow.
 
-See the pinned [Unity setup and examples](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/UnityLocalization.md)
-and [legacy JSON guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/README.md).
+See the pinned [Unity setup and examples](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Localization/UnityLocalization.md)
+and [legacy JSON guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Localization/README.md).
 
 ## Collections, JSON, and synchronization
 
@@ -262,8 +278,8 @@ The optional samples include `NetworkExamples.prefab` (native/LCG lamps and a
 moving cube) and `HighBandwidthExamples.prefab` (native payload and LCG motion
 load generators). Both load generators start stopped. Keep native examples
 outside the zone unless intentionally using native-sync passthrough. See the
-[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.md)
-and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.th.md).
+[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Networking/README.md)
+and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.10/Example/Networking/README.th.md).
 
 The packet wire protocol remains experimental. Recompile UdonSharp programs
 and rebuild worlds after upgrading to 0.3.6: older builds cannot decode the

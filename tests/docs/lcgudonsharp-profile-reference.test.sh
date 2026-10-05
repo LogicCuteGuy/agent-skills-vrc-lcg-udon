@@ -29,7 +29,7 @@ done
 require_text "$REFERENCE" 'exact compiler-lowered `List<T>`'
 require_text "$REFERENCE" 'VRChat Worlds SDK `3.10.5`'
 require_text "$REFERENCE" 'LCGUdonSharp'
-require_text "$REFERENCE" '`0.3.9`'
+require_text "$REFERENCE" '`0.3.10`'
 require_text "$REFERENCE" 'Dictionary<TKey,TValue>'
 require_text "$REFERENCE" 'System.Text.Json'
 require_text "$REFERENCE" '[UdonSynced, NonSerialized]'
@@ -39,22 +39,30 @@ for text in 'Custom ScriptableObject data (0.3.8)' 'fresh shallow defensive copy
 done
 
 for readme in README.md README.ja.md README.ko.md README.th.md README.zh-CN.md README.zh-TW.md; do
-    require_text "$REPO_ROOT/$readme" 'LCGUdonSharp-0.3.9'
+    require_text "$REPO_ROOT/$readme" 'LCGUdonSharp-0.3.10'
     require_text "$REPO_ROOT/$readme" 'ScriptableObject'
     require_text "$REPO_ROOT/$readme" 'InvalidCastException'
     require_text "$REPO_ROOT/$readme" '128'
     require_text "$REPO_ROOT/$readme" 'Smart Strings'
     require_text "$REPO_ROOT/$readme" '1.4.5'
-    require_text "$REPO_ROOT/$readme" '1.21.25'
-    require_text "$REPO_ROOT/$readme" '/blob/0.3.9/Example/Localization/UnityLocalization.md'
-    require_text "$REPO_ROOT/$readme" '/blob/0.3.9/Example/ScriptableObjects/README.md'
+    require_text "$REPO_ROOT/$readme" '1.21.26'
+    require_text "$REPO_ROOT/$readme" 'com.logiccuteguy.lcgudonsharp-0.3.10.zip'
+    require_text "$REPO_ROOT/$readme" 'com.unity.scriptablebuildpipeline-1.21.26.zip'
+    require_text "$REPO_ROOT/$readme" 'Packages/com.unity.scriptablebuildpipeline'
+    require_text "$REPO_ROOT/$readme" '/releases/tag/sbp-compatibility-1.21.26'
+    require_text "$REPO_ROOT/$readme" '/blob/0.3.10/Example/Localization/UnityLocalization.md'
+    require_text "$REPO_ROOT/$readme" '/blob/0.3.10/Example/ScriptableObjects/README.md'
 done
 for readme in .claude/audit/README.md unity-project-for-sdk-search/README.md; do
-    require_text "$REPO_ROOT/$readme" '**4.2.6**'
-    require_text "$REPO_ROOT/$readme" '**0.3.9**'
+    require_text "$REPO_ROOT/$readme" '**4.2.7**'
+    require_text "$REPO_ROOT/$readme" '**0.3.10**'
 done
 
 for text in 'Unity Localization bridge (0.3.9)' '`1.4.5`' '`1.21.25`' 'SendCustomEvent' 'not persisted' 'Unsupported syntax stops baking' 'no network spawning' 'glyph coverage'; do
+    require_text "$REFERENCE" "$text"
+done
+
+for text in 'extract both named release ZIPs' '`1.21.26`' 'before Unity compiles scripts' 'Keep SBP embedded' 'Unity Companion' 'UPM dependency still names base SBP'; do
     require_text "$REFERENCE" "$text"
 done
 

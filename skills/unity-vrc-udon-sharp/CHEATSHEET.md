@@ -22,7 +22,9 @@ Only the consuming behaviour needs a program asset. Unlisted stock restrictions
 still apply.
 
 LCGUdonSharp 0.3.9 also bakes Unity Localization String/Asset Tables into Udon.
-Requires Localization 1.4.5 and Scriptable Build Pipeline 1.21.25. Language
+Requires Localization 1.4.5; with 0.3.10 install embedded SBP compatibility
+1.21.26 (based on 1.21.25) before Unity compiles. Manual installs need both ZIPs;
+keep SBP in Packages/com.unity.scriptablebuildpipeline across Library regeneration. Language
 selection and prefab variants are local, not persistent/network spawning.
 Smart Strings are a validated subset; unsupported syntax stops baking. Read the
 profile reference for setup, fallbacks, UI event wiring, and font requirements.

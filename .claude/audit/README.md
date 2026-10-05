@@ -1,6 +1,6 @@
 # SDK Coverage Audit (maintainer procedure)
 
-> Repository documentation version: **4.2.6** · LCGUdonSharp contract: **0.3.9**
+> Repository documentation version: **4.2.7** · LCGUdonSharp contract: **0.3.10**
 
 This directory holds the **how-to-run** for the binary-backed coverage audit.
 The **policy** — what may and may not enter a skill, and how undocumented APIs
