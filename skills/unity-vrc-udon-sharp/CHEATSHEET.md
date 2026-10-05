@@ -21,6 +21,12 @@ data after upgrading: 0.3.8 changes the snapshot layout.
 Only the consuming behaviour needs a program asset. Unlisted stock restrictions
 still apply.
 
+LCGUdonSharp 0.3.9 also bakes Unity Localization String/Asset Tables into Udon.
+Requires Localization 1.4.5 and Scriptable Build Pipeline 1.21.25. Language
+selection and prefab variants are local, not persistent/network spawning.
+Smart Strings are a validated subset; unsupported syntax stops baking. Read the
+profile reference for setup, fallbacks, UI event wiring, and font requirements.
+
 ## Features Blocked in Udon Runtime
 
 These alternatives apply to code that executes in Udon. Editor-evaluated field initializers may use `List<T>`, LINQ, and lambdas only to generate a final field value that Udon can hold; the same code remains blocked in `Start()`, `Interact()`, and other Udon runtime methods. A `Random.Range` call in an initializer is evaluated in the Editor and stored as a baked default, not runtime randomness.

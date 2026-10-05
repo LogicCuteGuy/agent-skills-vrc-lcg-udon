@@ -16,7 +16,7 @@ description: >-
 license: MIT
 metadata:
     author: niaka3dayo
-    version: "4.2.5"
+    version: "4.2.6"
     tags: vrchat, udonsharp, lcgudonsharp, udon, networking, sync, persistence, dynamics, asmdef, vpm, assembly-definition
 ---
 
@@ -176,7 +176,7 @@ Load only what you need. Over-loading wastes tokens; under-loading causes critic
 
 | Task | MANDATORY READ | Optional | Do NOT Load |
 |------|---------------|----------|-------------|
-| Using `com.logiccuteguy.lcgudonsharp`, LCGUdonSharp syntax, custom ScriptableObject data, or `[LCGPacket]` | `lcgudonsharp.md`, plus the primary domain reference | `constraints.md`, `networking.md` | None of the relevant primary references |
+| Using `com.logiccuteguy.lcgudonsharp`, LCGUdonSharp syntax, custom ScriptableObject data, Unity Localization bridge, or `[LCGPacket]` | `lcgudonsharp.md`, plus the primary domain reference | `constraints.md`, `networking.md` | None of the relevant primary references |
 | Writing networking/sync code | `networking.md`, `networking-antipatterns.md` | `networking-bandwidth.md`, `sync-examples.md` | `dynamics.md`, `web-loading.md`, `image-loading-vram.md` |
 | Building UI/menus | `patterns-ui.md`, `events.md` | `patterns-core.md`, `api.md` | `networking-bandwidth.md`, `dynamics.md`, `web-loading.md` |
 | Implementing persistence (save/load) | `persistence.md` | `patterns-networking.md`, `events.md` | `dynamics.md`, `web-loading.md`, `image-loading-vram.md` |
@@ -300,7 +300,7 @@ Use SDK 3.10.5 for publishing. Check the matching release notes before relying o
 
 | File | Contents | Search Hints |
 |------|----------|--------------|
-| `lcgudonsharp.md` | LCGUdonSharp compiler profile, extended language boundaries, profile detection, and experimental packet networking | LCGUdonSharp, com.logiccuteguy.lcgudonsharp, interface, async, exceptions, LINQ, closed generics, dynamic, Span, ScriptableObject, read-only data snapshots, nested assets, polymorphic references, checked casts, LCGPacket, LCGNetworkZone |
+| `lcgudonsharp.md` | LCGUdonSharp compiler profile, extended language boundaries, profile detection, and experimental packet networking | LCGUdonSharp, com.logiccuteguy.lcgudonsharp, interface, async, exceptions, LINQ, closed generics, dynamic, Span, ScriptableObject, read-only data snapshots, nested assets, polymorphic references, checked casts, Unity Localization, Smart Strings, localized assets, LCGPacket, LCGNetworkZone |
 | `constraints.md` | C# feature availability in UdonSharp; blocked features; syncable types; attributes; DataList vs array decision guidance; DataList/DataDictionary capacity APIs; advanced workarounds (object array pseudo-struct); synced VRCUrl lists | List, async, try/catch, LINQ, generics, DataList, DataDictionary, DataList capacity, DataDictionary capacity, EnsureCapacity, DataList vs array, when to use DataList, VRCUrl array, VRCUrl sync, pseudo-struct, object array cast, multi-field state container |
 | `networking.md` | Ownership model, sync modes, RequestSerialization, NetworkCallable, network-event sender authorization, data limits | UdonSynced, SetOwner, BehaviourSyncMode, FieldChangeCallback, OnDeserialization, NetworkCalling, CallingPlayer, InNetworkCall, legacy event, underscore, authorization, master leave, ownership cascade |
 | `networking-bandwidth.md` | Bandwidth throttling, bit packing, synced data size examples, debugging, owner-centric architecture | IsClogged, bandwidth, throttle, bit packing, data budget, IsMaster |

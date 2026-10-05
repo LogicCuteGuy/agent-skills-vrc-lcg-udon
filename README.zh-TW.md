@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/VRChat_SDK-3.10.5-00b4d8?style=for-the-badge" alt="VRChat SDK" />
   <img src="https://img.shields.io/badge/UdonSharp-C%23_%E2%86%92_Udon-5C2D91?style=for-the-badge&logo=csharp&logoColor=white" alt="UdonSharp" />
-  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.8-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.8" />
+  <img src="https://img.shields.io/badge/LCGUdonSharp-0.3.9-6f42c1?style=for-the-badge" alt="LCGUdonSharp 0.3.9" />
   <img src="https://img.shields.io/badge/AI_Agent-Skills_%26_Rules-ff6b35?style=for-the-badge" alt="Agent Skills" />
   <img src="https://img.shields.io/github/license/LogicCuteGuy/agent-skills-vrc-lcg-udon?style=for-the-badge" alt="授權條款" />
 </p>
@@ -29,13 +29,15 @@
   <a href="#disclaimer">免責聲明</a>
 </p>
 
-> 請透過 VCC/ALCOM 或發行版中具名的 ZIP 套件安裝 LCGUdonSharp 0.3.8。GitHub 自動產生的原始碼封存檔不是可安裝的 Unity 套件。請在編譯器安裝完成後再匯入選用範例。 [LCGUdonSharp 0.3.8](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.8)
+> 請透過 VCC/ALCOM 或發行版中具名的 ZIP 套件安裝 LCGUdonSharp 0.3.9。GitHub 自動產生的原始碼封存檔不是可安裝的 Unity 套件。請在編譯器安裝完成後再匯入選用範例。 [LCGUdonSharp 0.3.9](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.9)
 
 0.3.6 允許不含同步欄位的 Continuous 行為位於 `LCGNetworkZone` 內。**Allow Native Sync Passthrough** 需手動啟用；原生同步欄位仍在整個實例中同步，不受區域範圍限制。
 
-LCGUdonSharp 0.3.6 會在進入區域及 `OnPlayerRestored` 後恢復目前欄位與物件快照，並在擁有者離開後修復所有權。物件移動採用批次傳送，支援壅塞退避與遠端插值。舊建置無法解碼新的移動批次格式，因此更新後必須重新建置世界。原生/LCG 網路入門預製件、負載範例與泰語設定指南請參閱 [網路範例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.md)。
+LCGUdonSharp 0.3.6 會在進入區域及 `OnPlayerRestored` 後恢復目前欄位與物件快照，並在擁有者離開後修復所有權。物件移動採用批次傳送，支援壅塞退避與遠端插值。舊建置無法解碼新的移動批次格式，因此更新後必須重新建置世界。原生/LCG 網路入門預製件、負載範例與泰語設定指南請參閱 [網路範例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.md)。
 
-LCGUdonSharp 0.3.8 的唯讀自訂 `ScriptableObject` 快照支援巢狀參照/陣列，以及指定給自訂基底型別的衍生資源。支援 `is`、宣告模式、`as` 與具型別檢查的明確轉型；不相容的 `as` 回傳 null，無效明確轉型觸發 `InvalidCastException`。陣列欄位仍回傳副本。仍不支援寫入、屬性/方法、執行時建立、轉型為 `object`/原生資源、陣列共變性或同步快照。循環參照與超過 128 個資源的巢狀結構會造成烘焙錯誤。執行時型別標籤改變了快照配置，升級後須重新編譯所有 Udon 程式並重新烘焙場景/預製件資料。請參閱 [商店/裝備範例與資料指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/ScriptableObjects/README.md)。
+LCGUdonSharp 0.3.8 的唯讀自訂 `ScriptableObject` 快照支援巢狀參照/陣列，以及指定給自訂基底型別的衍生資源。支援 `is`、宣告模式、`as` 與具型別檢查的明確轉型；不相容的 `as` 回傳 null，無效明確轉型觸發 `InvalidCastException`。陣列欄位仍回傳副本。仍不支援寫入、屬性/方法、執行時建立、轉型為 `object`/原生資源、陣列共變性或同步快照。循環參照與超過 128 個資源的巢狀結構會造成烘焙錯誤。執行時型別標籤改變了快照配置，升級後須重新編譯所有 Udon 程式並重新烘焙場景/預製件資料。請參閱 [商店/裝備範例與資料指南](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/ScriptableObjects/README.md)。
+
+LCGUdonSharp 0.3.9 將 Unity Localization String/Asset Tables 烘焙為 Udon，支援文字、精靈、紋理、音訊及本地預製件變體，不需在執行時載入 Addressables。語言選擇僅在本地生效且不跨造訪儲存，支援區域/預設語言後備、下拉選單與語言變更回呼。Smart Strings 僅支援已驗證的純量預留位置、固定文化特性的數字格式、具後備選項的 choose，以及英語或泰語/日語/中文複數形式，並非任意格式器。需要 Unity Localization 1.4.5 與 Scriptable Build Pipeline 1.21.25。不支援的設定會停止烘焙；請提供涵蓋所用語言的字型。請參閱 [設定與範例](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/UnityLocalization.md)。舊版 JSON 編輯工具仍可使用。
 
 ---
 
@@ -50,7 +52,7 @@ LCGUdonSharp 0.3.8 的唯讀自訂 `ScriptableObject` 快照支援巢狀參照/�
 | 編譯器設定檔 | Runtime 指引 |
 |--------------|--------------|
 | **Stock UdonSharp** | 不支援 `List<T>`、`async/await`、`try/catch`、runtime LINQ/lambda、介面及未支援的泛型。請使用本專案記載的 Stock 替代方案。 |
-| **LCGUdonSharp 0.3.8** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
+| **LCGUdonSharp 0.3.9** | 當目前 Unity 專案安裝 `com.logiccuteguy.lcgudonsharp` 時，可在文件規定的範圍內使用受限介面、async lowering、同步例外、`Where`/`Select` LINQ closure、封閉泛型、可證明型別的 `dynamic`、陣列支援的 `Span<T>`、具 JSON 支援且精確 lowering 的 `List<T>` / `Dictionary<TKey,TValue>` 與實驗性 `[LCGPacket]`。 |
 
 LCGUdonSharp 並非不受限制的 .NET：僅支援編譯器精確 lowering 的 `List<T>` 與 `Dictionary<TKey,TValue>` 形式，其他泛型 heap collection 仍不可使用，而且僅支援 [`references/lcgudonsharp.md`](skills/unity-vrc-udon-sharp/references/lcgudonsharp.md) 列出的 async、例外、LINQ、collection/JSON 與語言形式。代理與驗證掛鉤必須先檢查目前 Unity 專案，才能套用 Stock `NEVER` 清單；若無法檢查專案，則會刻意預設為 Stock UdonSharp。
 

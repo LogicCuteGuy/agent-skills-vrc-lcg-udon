@@ -2,34 +2,33 @@
 
 Use this profile only when the Unity project installs
 `com.logiccuteguy.lcgudonsharp`. The verified package contract is LCGUdonSharp
-`0.3.8` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
+`0.3.9` on Unity `2022.3` with VRChat Worlds SDK `3.10.5`.
 
 This reference overrides the stock compiler restrictions only where it says so.
 Ownership, serialization, UdonVM API availability, event signatures, and all
 other runtime rules in this Skill still apply.
 
-## Installation and upgrade (0.3.8)
+## Installation and upgrade (0.3.9)
 
 Install through VCC/ALCOM or extract the named release asset
-`com.logiccuteguy.lcgudonsharp-0.3.8.zip` before using a local package reference.
+`com.logiccuteguy.lcgudonsharp-0.3.9.zip` before using a local package reference.
 GitHub's automatic source archives are developer checkouts, not installable
 Unity packages. The 0.3.2 distribution could lack the compiler payload; update
-affected projects to 0.3.8 and let Unity refresh so the installer can repair it.
+affected projects to 0.3.9 and let Unity refresh so the installer can repair it.
 
 Installable packages contain the compiler under `Payload~/UdonSharp` and optional
 examples under `Samples~/Examples`. Import examples only after setup completes.
 The installer validates compiler features, dependencies, and metadata before
-replacing the compiler. Version 0.3.8 adds nested and polymorphic data snapshots
-and a local equipment example. Upstream reports 27 Unity ScriptableObject checks,
-including equipment purchases and cast behavior in the Udon VM, seven packaging
-tests, and an editor test assembly compiling with zero errors. These are upstream
-results, not
-runtime validation performed by this skills repository. The 0.3.6 networking
-recovery and motion-batching guidance below remains applicable; it does not
-establish crowded-world bandwidth, FPS, or latency for every project.
+replacing the compiler. Version 0.3.9 adds baked Unity Localization tables,
+validated Smart Strings, localized assets, and build/thread compatibility fixes.
+Upstream reports seven packaging tests, a successful C# build, 24 localization
+fixture cases executed in Unity, and Play Mode language/asset/callback checks
+after startup. These are upstream results, not runtime validation performed by
+this skills repository. Earlier networking and data-snapshot guidance below
+remains applicable; these checks do not prove every project's runtime behavior.
 
-Source: [LCGUdonSharp 0.3.8 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.8)
-and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/README.md#installation--setup).
+Source: [LCGUdonSharp 0.3.9 release](https://github.com/LogicCuteGuy/LCGUdonSharp/releases/tag/0.3.9)
+and [installation guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/README.md#installation--setup).
 
 ## Selecting the profile
 
@@ -116,8 +115,56 @@ The optional `ScriptableObjectShopExample.prefab` and
 `ScriptableObjectEquipmentExample.prefab` demonstrate local purchases, not
 multiplayer synchronization. The equipment example uses weapon/spell definitions,
 nested economy assets, and a base-typed catalog. See the pinned
-[data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/ScriptableObjects/README.md)
+[data guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/ScriptableObjects/README.md)
 for setup, supported types, and defensive-copy/cast examples.
+
+## Unity Localization bridge (0.3.9)
+
+Package dependencies are Unity Localization `1.4.5` and Scriptable Build Pipeline
+`1.21.25`. Author Locales, String Table Collections, and Asset Table Collections
+with Unity Localization. LCGUdonSharp bakes values and bindings into the temporary
+Play Mode/build scene; native authoring components remain editable. The world
+does not load Addressables at runtime. Re-enter Play Mode or rebuild to apply
+table edits. One manager per collection per scene is supported; text and manager
+must share a scene, including inactive text. Unsupported configurations stop baking.
+
+Create a manager through **Tools > LCGUdonSharp > Localization > Create Unity
+Manager**, assign its collection on **Unity Localization Source**, and connect
+**Localize String Event** to the dynamic `Text.text` / `TMP_Text.text` setter.
+Use **Bake / Validate Now** before playing. Call `LCGLocalization.SetLanguage`,
+`SetLanguageByIndex`, `NextLanguage`, or `FollowClientLanguage`. Selection follows
+the VRChat client until manually changed, remains local, and is not persisted
+across visits. Regional codes fall back to their base language; missing/empty
+translations fall back to the default language and then original text/key.
+Invalid codes/indices preserve the current language.
+
+Wire UI events to the backing **Udon Behaviour > SendCustomEvent**, not direct
+editor-proxy callbacks. Language/TMP dropdowns use `Dropdown Languages` and
+**Wire Language Dropdown**. Changed-target scripts receive `LocalizationChanged`
+by default and read `CurrentLanguage`; variable refreshes do not send language
+change notifications. `SetVariable` accepts string values; format numeric values
+invariantly. Binding-local scalar variables override manager globals.
+`GetWithVariables` formats an explicit lookup without changing manager state.
+
+Smart Strings support named/numbered scalar placeholders, invariant numeric
+formats, choose with a required fallback, English two-form plurals, and
+Thai/Japanese/Chinese one-form plurals. Missing variables retain placeholders;
+inserted values are literal text. Reflection selectors, persistent Unity global
+variable groups, runtime argument objects, nested named placeholders, other
+locale plural rules, and date/list/conditional/custom formatters are unsupported.
+Unsupported syntax stops baking; this is not the full Unity Smart String engine.
+
+Asset Tables bind sprites, textures, and audio clips to their component setters.
+Use `LCGLocalizePrefabEvent` for prefab variants: baked locale children toggle
+locally, with no network spawning. Missing assets fall back to the default locale
+then the original asset. Assets are included directly, increasing world build
+size. Arbitrary native callbacks and per-asset locale overrides are rejected.
+Provide fonts with glyph coverage for every displayed language; localization
+does not supply complete fonts automatically. Legacy JSON authoring remains
+available, but Unity tables are the primary workflow.
+
+See the pinned [Unity setup and examples](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/UnityLocalization.md)
+and [legacy JSON guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Localization/README.md).
 
 ## Collections, JSON, and synchronization
 
@@ -215,8 +262,8 @@ The optional samples include `NetworkExamples.prefab` (native/LCG lamps and a
 moving cube) and `HighBandwidthExamples.prefab` (native payload and LCG motion
 load generators). Both load generators start stopped. Keep native examples
 outside the zone unless intentionally using native-sync passthrough. See the
-[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.md)
-and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.8/Example/Networking/README.th.md).
+[networking guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.md)
+and [Thai setup guide](https://github.com/LogicCuteGuy/LCGUdonSharp/blob/0.3.9/Example/Networking/README.th.md).
 
 The packet wire protocol remains experimental. Recompile UdonSharp programs
 and rebuild worlds after upgrading to 0.3.6: older builds cannot decode the
